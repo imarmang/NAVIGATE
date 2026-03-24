@@ -1,7 +1,6 @@
 # Python
 __pycache__/
 *.pyc
-.env
 venv/
 
 # Node
@@ -17,4 +16,5 @@ dist/
 .DS_Store
 __MACOSX/
 
-.idea
+# IDE
+.idea/
