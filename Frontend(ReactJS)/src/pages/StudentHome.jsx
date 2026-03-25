@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getMe, getAppointments } from '../services/api'
 import Calendar from '../components/Calendar'
+import CreateAppointment from '../components/CreateAppointment'
 
 function StudentHome() {
     const { logout } = useAuth()
@@ -10,6 +11,11 @@ function StudentHome() {
     const [student, setStudent] = useState(null)
     const [appointments, setAppointments] = useState([])
     const [loading, setLoading] = useState(true)
+
+    const fetchAppointments = () => {
+        getAppointments()
+            .then(res => setAppointments(res.data))
+    }
 
     useEffect(() => {
         getMe()
@@ -19,9 +25,8 @@ function StudentHome() {
                 navigate('/login')
             })
 
-        getAppointments()
-            .then(res => setAppointments(res.data))
-            .finally(() => setLoading(false))
+        fetchAppointments()
+        setLoading(false)
     }, [])
 
     const handleLogout = () => {
@@ -35,6 +40,7 @@ function StudentHome() {
         <div>
             <h1>Welcome, {student?.first_name}!</h1>
             <button onClick={handleLogout}>Logout</button>
+            <CreateAppointment onAppointmentCreated={fetchAppointments} />
             <Calendar appointments={appointments} />
         </div>
     )
