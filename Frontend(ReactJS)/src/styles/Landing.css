@@ -1,0 +1,364 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+.landing-wrapper {
+    background: #f5f6fa;
+    min-height: 100vh;
+}
+
+/* Navbar */
+.landing-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 64px;
+    background: #2F4263;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+.landing-navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.landing-logo {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.landing-nsu-badge {
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8);
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 20px;
+}
+
+.landing-navbar-right {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-register {
+    height: 36px;
+    padding: 0 20px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.btn-register:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.btn-login {
+    height: 36px;
+    padding: 0 20px;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    color: #2F4263;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: opacity .2s;
+}
+
+.btn-login:hover {
+    opacity: 0.9;
+}
+
+/* Hero */
+.landing-hero {
+    margin-top: 64px;
+    height: 320px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+}
+
+.landing-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(47,66,99,0.65);
+}
+
+.landing-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.landing-hero-content h1 {
+    color: #fff;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.landing-hero-content p {
+    color: rgba(255,255,255,0.85);
+    font-size: 16px;
+    max-width: 500px;
+    line-height: 1.6;
+}
+
+.btn-get-started {
+    margin-top: 24px;
+    height: 44px;
+    padding: 0 28px;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    color: #2F4263;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: opacity .2s;
+    display: inline-block;
+}
+
+.btn-get-started:hover {
+    opacity: 0.9;
+}
+
+/* Main Content */
+.landing-content {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.landing-section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 20px;
+}
+
+/* Cards */
+.landing-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #f0f0f0;
+}
+
+/* How it works */
+.how-it-works-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.step-number {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2F4263;
+    opacity: 0.3;
+    margin-bottom: 8px;
+}
+
+.step-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+}
+
+.step-description {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.6;
+}
+
+/* Two column layout */
+.two-col-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 16px;
+}
+
+/* Professor cards */
+.professor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.professor-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.professor-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2F4263;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.professor-info {
+    flex: 1;
+}
+
+.professor-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.professor-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a2e;
+    margin: 0;
+}
+
+.professor-meta {
+    font-size: 12px;
+    color: #888;
+    margin: 0;
+}
+
+.role-badge-professor {
+    font-size: 11px;
+    padding: 1px 8px;
+    border-radius: 20px;
+    background: #e8edf5;
+    color: #2F4263;
+    font-weight: 500;
+}
+
+.role-badge-si {
+    font-size: 11px;
+    padding: 1px 8px;
+    border-radius: 20px;
+    background: #e8f0fe;
+    color: #506B90;
+    font-weight: 500;
+}
+
+.btn-book {
+    margin-top: 16px;
+    width: 100%;
+    height: 40px;
+    background: #2F4263;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.btn-book:hover {
+    background: #506B90;
+}
+
+/* NSU Resources */
+.resource-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.resource-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background .2s;
+}
+
+.resource-item:hover {
+    background: #f0f0f0;
+}
+
+.resource-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a2e;
+    margin: 0;
+}
+
+.resource-description {
+    font-size: 12px;
+    color: #888;
+    margin: 0;
+}
+
+.resource-arrow {
+    color: #2F4263;
+    font-size: 18px;
+}
+
+/* Footer */
+.landing-footer {
+    text-align: center;
+    padding: 24px 0;
+    border-top: 1px solid #e8e8e8;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.landing-footer p {
+    margin: 0;
+}
+
+.landing-footer-sub {
+    margin: 6px 0 0 0 !important;
+    font-size: 12px;
+}
+
+.landing-footer a {
+    color: #2F4263;
+    text-decoration: none;
+    font-weight: 500;
+}
