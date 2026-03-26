@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { registerStudent } from '../services/api'
 import nsuBackground from '../assets/nsuBackground.jpeg'
+import '../styles/Register.css'
 
 function Register() {
     const [formData, setFormData] = useState({
@@ -35,59 +36,41 @@ function Register() {
         }
     }
 
-    const inputStyle = {
-        width: '100%',
-        height: '50px',
-        background: 'rgba(255,255,255,0.2)',
-        border: 'none',
-        borderRadius: '30px',
-        padding: '0 20px',
-        color: '#fff',
-        fontSize: '15px',
-        outline: 'none',
-        marginBottom: '16px'
-    }
-
     return (
-        <div style={{
-            backgroundImage: `url(${nsuBackground})`,
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            backgroundAttachment: 'fixed',
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-        }}>
-            <div style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'rgba(39, 39, 39, 0.5)'
-            }} />
+        <div
+            className='register-wrapper'
+            style={{ backgroundImage: `url(${nsuBackground})` }}
+        >
+            <div className='register-blue-overlay' />
+            <div className='register-blur-overlay' />
 
-            <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                <h1 style={{ color: '#fff', fontSize: '32px', fontWeight: 700, marginBottom: '30px' }}>
-                    N.A.V.I.G.A.T.E.
-                </h1>
+            <button className='register-back-btn' onClick={() => navigate('/')}>
+                ← Back
+            </button>
 
-                <div style={{
-                    width: '450px',
-                    background: 'transparent',
-                    border: '2px solid #fff',
-                    borderRadius: '20px',
-                    backdropFilter: 'blur(20px)',
-                    padding: '40px'
-                }}>
-                    <h2 style={{ color: '#fff', marginBottom: '24px' }}>Create Account</h2>
+            <div className='register-card'>
 
-                    {error && (
-                        <p style={{ color: '#ff6b6b', marginBottom: '16px', fontSize: '14px' }}>
-                            {error}
-                        </p>
-                    )}
+                {/* Left Panel */}
+                <div className='register-left-panel'>
+                    <div className='register-circle-top' />
+                    <div className='register-circle-bottom' />
+                    <div className='register-logo'>N.A.V.I.G.A.T.E.</div>
+                    <div className='register-divider' />
+                    <p className='register-tagline'>
+                        Nova Southeastern University's academic guidance and tutoring system.
+                    </p>
+                    <div className='register-nsu-badge'>Nova Southeastern University</div>
+                </div>
+
+                {/* Right Panel */}
+                <div className='register-right-panel'>
+                    <h2 className='register-title'>Create Account</h2>
+                    <p className='register-subtitle'>Register with your NSU email and N-Number</p>
+
+                    {error && <p className='register-error'>{error}</p>}
 
                     <form onSubmit={handleSubmit}>
-                        <div style={{ display: 'flex', gap: '10px' }}>
+                        <div className='register-name-row'>
                             <input
                                 type='text'
                                 name='first_name'
@@ -95,7 +78,7 @@ function Register() {
                                 value={formData.first_name}
                                 onChange={handleChange}
                                 required
-                                style={inputStyle}
+                                className='register-input'
                             />
                             <input
                                 type='text'
@@ -104,7 +87,7 @@ function Register() {
                                 value={formData.last_name}
                                 onChange={handleChange}
                                 required
-                                style={inputStyle}
+                                className='register-input'
                             />
                         </div>
 
@@ -115,7 +98,7 @@ function Register() {
                             value={formData.n_number}
                             onChange={handleChange}
                             required
-                            style={inputStyle}
+                            className='register-input'
                         />
 
                         <input
@@ -125,7 +108,7 @@ function Register() {
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            style={inputStyle}
+                            className='register-input'
                         />
 
                         <input
@@ -135,35 +118,24 @@ function Register() {
                             value={formData.password}
                             onChange={handleChange}
                             required
-                            style={inputStyle}
+                            className='register-input'
                         />
 
                         <button
                             type='submit'
                             disabled={loading}
-                            style={{
-                                width: '100%',
-                                height: '45px',
-                                background: 'rgba(255,255,255,0.7)',
-                                border: 'none',
-                                borderRadius: '30px',
-                                fontSize: '15px',
-                                fontWeight: 500,
-                                cursor: 'pointer',
-                                transition: '.3s'
-                            }}
+                            className='register-btn'
                         >
                             {loading ? 'Creating account...' : 'Register'}
                         </button>
                     </form>
 
-                    <p style={{ color: '#fff', marginTop: '20px', fontSize: '14px' }}>
+                    <p className='register-footer'>
                         Already have an account?{' '}
-                        <Link to='/login' style={{ color: '#fff', fontWeight: 600 }}>
-                            Login
-                        </Link>
+                        <Link to='/login'>Login</Link>
                     </p>
                 </div>
+
             </div>
         </div>
     )

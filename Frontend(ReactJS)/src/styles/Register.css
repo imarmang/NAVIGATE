@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.register-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Poppins', sans-serif;
+}
+
+.register-blue-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(47, 66, 99, 0.5);
+}
+
+.register-blur-overlay {
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.register-back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    height: 36px;
+    padding: 0 16px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.register-back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.register-card {
+    display: flex;
+    width: 860px;
+    min-height: 600px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    position: relative;
+    z-index: 1;
+}
+
+.register-left-panel {
+    width: 45%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+}
+
+.register-circle-top {
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.register-circle-bottom {
+    position: absolute;
+    bottom: -60px;
+    left: -40px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.register-logo {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.register-divider {
+    width: 40px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 20px 0;
+}
+
+.register-tagline {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 220px;
+}
+
+.register-nsu-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 32px;
+}
+
+.register-right-panel {
+    width: 55%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px 52px;
+}
+
+.register-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+}
+
+.register-subtitle {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 32px;
+}
+
+.register-error {
+    font-size: 13px;
+    color: #e74c3c;
+    margin-bottom: 16px;
+    background: #fdf0f0;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+.register-name-row {
+    display: flex;
+    gap: 12px;
+}
+
+.register-input {
+    width: 100%;
+    height: 46px;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 10px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    outline: none;
+    margin-bottom: 14px;
+    background: #fafafa;
+    transition: border-color .2s;
+}
+
+.register-input:focus {
+    border-color: #2F4263;
+    background: #fff;
+}
+
+.register-btn {
+    width: 100%;
+    height: 46px;
+    background: #2F4263;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background .2s;
+}
+
+.register-btn:hover {
+    background: #506B90;
+}
+
+.register-btn:disabled {
+    background: #506B90;
+    cursor: not-allowed;
+}
+
+.register-footer {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #888;
+    text-align: center;
+}
+
+.register-footer a {
+    color: #2F4263;
+    font-weight: 500;
+    text-decoration: none;
+}

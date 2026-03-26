@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
-import ProtectedRoute from './components/ProtectedRoute'
-import StudentLogin from './pages/StudentLogin'
-import Register from './pages/Register'
-import StudentHome from './pages/StudentHome'
-import Landing from "./pages/Landing.jsx";
+import { AuthProvider } from '../../context/AuthContext.jsx'
+import ProtectedRoute from '../../components/ProtectedRoute.jsx'
+import StudentLogin from '../../pages/StudentLogin.jsx'
+import Register from '../../pages/Register.jsx'
+import StudentHome from '../../pages/StudentHome.jsx'
+import Landing from "../../pages/Landing.jsx";
 
 function App() {
     return (

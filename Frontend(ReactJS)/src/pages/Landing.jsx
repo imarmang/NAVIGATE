@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import nsuBackground from '../assets/nsuBackground.jpeg'
 import '../styles/Landing.css'
+import LandingNavbar from '../components/navbar/LandingNavbar.jsx'
 
 const FAKE_PROFESSORS = [
     { id: 1, name: 'Dr. Maxim Reza', subjects: ['CSIS', 'CEN'], availability: 'Mon, Wed', role: 'Professor' },
@@ -14,7 +15,8 @@ const NSU_RESOURCES = [
     { name: 'SharkLink', url: 'https://sharklinkportal.nova.edu', description: 'NSU Student Portal' },
     { name: 'NSU Libraries', url: 'https://library.nova.edu', description: 'Research and Resources' },
     { name: 'DegreeWorks', url: 'https://dw.nova.edu/ResponsiveDashboard/worksheets/WEB31', description: 'Check out your 4 year plan' },
-    { name: 'Canvas', url: 'https://nsu.instructure.com', description: 'Course management' },
+    { name: 'Canvas', url: 'https://nsu.instructure.com', description: 'Course Management' },
+    { name: 'College of Computing, AI, and Cybersecurity', url: 'https://computing.nova.edu/index.html', description: 'Learn about Your College' }
 ]
 
 const HOW_TO_STEPS = [
@@ -29,17 +31,7 @@ function Landing() {
     return (
         <div className='landing-wrapper'>
 
-            {/* Navbar */}
-            <nav className='landing-navbar'>
-                <div className='landing-navbar-left'>
-                    <span className='landing-logo'>N.A.V.I.G.A.T.E.</span>
-                    <span className='landing-nsu-badge'>Nova Southeastern University</span>
-                </div>
-                <div className='landing-navbar-right'>
-                    <button className='btn-register' onClick={() => navigate('/register')}>Register</button>
-                    <button className='btn-login' onClick={() => navigate('/login')}>Log In</button>
-                </div>
-            </nav>
+            <LandingNavbar />
 
             {/* Hero */}
             <div
@@ -84,7 +76,7 @@ function Landing() {
                             {FAKE_PROFESSORS.map(professor => (
                                 <div key={professor.id} className='professor-item'>
                                     <div className='professor-avatar'>
-{professor.name.split(' ').slice(-2).map(n => n[0]).join('')}
+                                    {professor.name.split(' ').slice(-2).map(n => n[0]).join('')}
                                     </div>
                                     <div className='professor-info'>
                                         <div className='professor-name-row'>
