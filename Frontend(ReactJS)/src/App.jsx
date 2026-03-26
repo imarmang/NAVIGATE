@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import StudentLogin from './pages/StudentLogin'
 import Register from './pages/Register'
 import StudentHome from './pages/StudentHome'
+import Landing from "./pages/Landing.jsx";
 
 function App() {
     return (
@@ -11,6 +12,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     {/* Public routes */}
+                    <Route path='/' element={<Landing />} />
                     <Route path='/login' element={<StudentLogin />} />
                     <Route path='/register' element={<Register />} />
 
