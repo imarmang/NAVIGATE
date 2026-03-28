@@ -18,7 +18,7 @@
 .student-navbar-left {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 40px;
 }
 
 .student-navbar-brand {
@@ -49,34 +49,85 @@
     gap: 4px;
 }
 
+.student-navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
 .student-nav-link {
-    height: 36px;
-    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    height: 64px;
+    padding: 0 14px;
     background: transparent;
     border: none;
-    border-radius: 8px;
-    color: rgba(255, 255, 255, 0.7);
+    border-bottom: 2px solid transparent;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 13px;
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
-    transition: background .2s, color .2s;
+    transition: color .2s, border-bottom-color .2s, gap .2s;
+    overflow: hidden;
 }
 
 .student-nav-link:hover {
-    background: rgba(255, 255, 255, 0.1);
     color: #fff;
+    border-bottom-color: rgba(255, 255, 255, 0.3);
+    gap: 8px;
 }
 
 .student-nav-link.active {
-    background: rgba(255, 255, 255, 0.15);
     color: #fff;
     font-weight: 500;
+    border-bottom-color: #fff;
+    gap: 8px;
+}
+
+.student-nav-icon {
+    font-size: 15px;
+    flex-shrink: 0;
+    transition: transform .2s;
+}
+
+.student-nav-link:hover .student-nav-icon {
+    transform: scale(1.1);
+}
+
+.student-nav-label {
+    font-size: 13px;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+    transition: max-width .3s ease, opacity .2s ease;
+}
+
+.student-nav-link:hover .student-nav-label,
+.student-nav-link.active .student-nav-label {
+    max-width: 100px;
+    opacity: 1;
 }
 
 .student-navbar-right {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+}
+
+.student-navbar-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .student-navbar-name {
@@ -86,18 +137,25 @@
 }
 
 .student-navbar-logout {
+    width: 36px;
     height: 36px;
-    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 8px;
-    color: #fff;
-    font-size: 13px;
-    font-family: 'Poppins', sans-serif;
+    color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
-    transition: background .2s;
+    transition: background .2s, color .2s;
 }
 
 .student-navbar-logout:hover {
     background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.student-nav-icon {
+    font-size: 14px;
+    margin-right: 4px;
 }
