@@ -136,11 +136,6 @@
     padding: 32px 0;
 }
 
-.home-empty-icon {
-    font-size: 32px;
-    margin-bottom: 8px;
-}
-
 .home-empty-text {
     font-size: 13px;
     color: #888;
@@ -270,7 +265,7 @@
     padding: 0 24px;
     background: #2F4263;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     color: #fff;
     font-size: 13px;
     font-weight: 500;
@@ -499,4 +494,13 @@
 
 .modal-btn-close:hover {
     background: #f5f6fa;
+}
+
+.home-empty-fa-icon {
+    font-size: 32px;
+    color: #d0d5e8;
+    margin-bottom: 12px;
+    display: block;
+    text-align: center;
+    width: 100%;
 }

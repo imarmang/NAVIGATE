@@ -6,6 +6,8 @@ import CreateAppointment from '../components/CreateAppointment'
 import StudentNavbar from '../components/navbar/StudentNavbar'
 import '../styles/StudentHome.css'
 import nsuBackground from '../assets/nsuBackground.jpeg'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCalendarXmark, faBookOpen, faClockRotateLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 function StudentHome() {
     const { logout } = useAuth()
@@ -14,6 +16,7 @@ function StudentHome() {
     const [appointments, setAppointments] = useState([])
     const [courses, setCourses] = useState([])
     const [loading, setLoading] = useState(true)
+    const [showForm, setShowForm] = useState(false)
 
     const fetchAppointments = () => {
         getAppointments()
@@ -86,8 +89,19 @@ function StudentHome() {
             {/* Main Content */}
             <div className='home-content'>
 
-                <CreateAppointment onAppointmentCreated={fetchAppointments} />
-
+            <div className='create-appointment-wrapper'>
+                <button
+                    className='btn-make-appointment'
+                    onClick={() => setShowForm(!showForm)}
+                >
+                    <FontAwesomeIcon icon={faPlus} style={{ marginRight: '8px' }} />
+                    Make an Appointment
+                </button>
+                {showForm && <CreateAppointment onAppointmentCreated={() => {
+                    fetchAppointments()
+                    setShowForm(false)
+                }} />}
+            </div>
                 <div className='home-two-col'>
 
                     {/* Upcoming Appointments */}
@@ -96,10 +110,10 @@ function StudentHome() {
                             <h2 className='home-card-title'>Upcoming Appointments</h2>
                         </div>
                         {upcomingAppointments.length === 0 ? (
-                            <div className='home-empty'>
-                                <div className='home-empty-icon'>📅</div>
-                                <p className='home-empty-text'>No upcoming appointments.</p>
-                            </div>
+                           <div className='home-empty'>
+                               <FontAwesomeIcon icon={faCalendarXmark} className='home-empty-fa-icon' />
+                               <p className='home-empty-text'>No upcoming appointments.</p>
+                           </div>
                         ) : (
                             upcomingAppointments.map(appointment => (
                                 <div key={appointment.id} className='appointment-item'>
@@ -134,7 +148,7 @@ function StudentHome() {
                         </div>
                         {courses.length === 0 ? (
                             <div className='home-empty'>
-                                <div className='home-empty-icon'>📚</div>
+                                <FontAwesomeIcon icon={faBookOpen} className='home-empty-fa-icon' />
                                 <p className='home-empty-text'>No courses enrolled yet.</p>
                             </div>
                         ) : (
@@ -160,7 +174,7 @@ function StudentHome() {
                     </div>
                     {pastAppointments.length === 0 ? (
                         <div className='home-empty'>
-                            <div className='home-empty-icon'>🕐</div>
+                            <FontAwesomeIcon icon={faClockRotateLeft} className='home-empty-fa-icon' />
                             <p className='home-empty-text'>No past appointments yet.</p>
                         </div>
                     ) : (
