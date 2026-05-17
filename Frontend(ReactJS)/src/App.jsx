@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { DataProvider } from './context/DataContext'
-import ProtectedRoute from './components/ProtectedRoute'
+import ProtectedRoute from './routes/ProtectedRoute.jsx'
 import StudentLogin from './pages/StudentLogin'
 import Register from './pages/Register'
 import StudentHome from './pages/StudentHome'
 import Landing from './pages/Landing'
+import AppointmentsPage from "./pages/Appointments.jsx";
 
 function App() {
     return (
@@ -26,7 +27,7 @@ function App() {
                         } />
                         <Route path='/appointments' element={
                             <ProtectedRoute>
-                                <StudentHome />
+                                <AppointmentsPage />
                             </ProtectedRoute>
                         } />
                         <Route path='/courses' element={

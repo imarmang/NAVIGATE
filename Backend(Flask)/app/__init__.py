@@ -1,9 +1,12 @@
+from datetime import timedelta
+
 from flask_cors import CORS
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
+
 import os
 
 load_dotenv()
@@ -17,8 +20,10 @@ def create_app():
 
     # Config
     app.config[ 'SQLALCHEMY_DATABASE_URI' ] = os.getenv( 'DATABASE_URL' )
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_pre_ping': True}
     app.config[ 'SQLALCHEMY_TRACK_MODIFICATIONS' ] = False
     app.config[ 'JWT_SECRET_KEY' ] = os.getenv( 'JWT_SECRET_KEY' )
+    app.config[ 'JWT_ACCESS_TOKEN_EXPIRES' ] = timedelta( hours=24 )
 
     # Initialize extensions
     db.init_app( app )
