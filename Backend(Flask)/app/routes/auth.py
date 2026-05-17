@@ -40,7 +40,7 @@ def register():
     db.session.add(new_student)
     db.session.commit()
 
-    return jsonify({'message': 'Account created successfully'}), 200
+    return jsonify({'message': 'Account created successfully'}), 201
 
 
 # Login a student
@@ -78,3 +78,7 @@ def me():
         return jsonify({'message': 'Student not found'}), 404
 
     return jsonify(student.to_dict()), 200
+
+# 200 - OK Status Code
+# 201 - Created Status Code
+# 404 - NOT FOUND Status Code
