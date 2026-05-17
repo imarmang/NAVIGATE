@@ -2,19 +2,21 @@ import { createContext, useContext, useState, useEffect } from 'react'
 
 const AuthContext = createContext()
 
-export function AuthProvider({ children }) {
-    const [loading, setLoading] = useState(true)
+export function AuthProvider( { children } ) {
+    const [ loading, setLoading ] = useState( true )
 
-    useEffect(() => {
-        setLoading(false)
-    }, [])
+    useEffect( () => {
+        setLoading( false )
+    }, [] )
 
-    const login = (token) => {
-        localStorage.setItem('access_token', token)
+    const login = ( token, nNumber ) => {
+        localStorage.setItem( 'access_token', token )
+        localStorage.setItem( 'n_number', nNumber )
     }
 
     const logout = () => {
         localStorage.removeItem('access_token')
+        localStorage.removeItem( 'n_number' )
     }
 
     const isLoggedIn = () => !!localStorage.getItem('access_token')

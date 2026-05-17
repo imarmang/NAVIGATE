@@ -4,35 +4,71 @@ import { registerStudent } from '../services/api'
 import nsuBackground from '../assets/nsuBackground.jpeg'
 import '../styles/Register.css'
 
+const VALID_EMAIL_DOMAINS = [ '@mynsu.nova.edu', '@nova.edu' ]
+const N_NUMBER_PATTERN = /^N\d{8}$/
+
 function Register() {
-    const [formData, setFormData] = useState({
+    const [ formData, setFormData ] = useState( {
         first_name: '',
         last_name: '',
         n_number: '',
         email: '',
         password: ''
-    })
-    const [error, setError] = useState('')
-    const [loading, setLoading] = useState(false)
+    } )
+    const [ error, setError ] = useState( '' )
+    const [ loading, setLoading ] = useState( false )
 
     const navigate = useNavigate()
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
+    const handleChange = ( e ) => {
+        setFormData({ ...formData, [ e.target.name ]: e.target.value } )
     }
 
-    const handleSubmit = async (e) => {
+    const validate = () => {
+        const { first_name, last_name, n_number, email, password } = formData
+
+        // Check all the fields are filled
+        if ( !first_name.trim() || !last_name.trim() || !n_number.trim() || !email.trim() || !password ) {
+            return 'All fields are required'
+        }
+
+        // Check that the email is an NSU email
+        if ( !VALID_EMAIL_DOMAINS.some( domain => email.endsWith( domain ) ) ) {
+            return 'Email must be an NSU email address'
+        }
+
+        // Check that the N number starts with N  followed by 8 digits
+        if ( !N_NUMBER_PATTERN.test( n_number.trim() ) ) {
+            return 'N-Number must be followed by 8 digits (e.g. N01234567)'
+        }
+
+        // Check the password length
+        if ( password.length < 8 ) {
+             return 'Password must be at least 8 characters'
+        }
+
+        return null
+    }
+
+    const handleSubmit = async ( e ) => {
         e.preventDefault()
-        setLoading(true)
-        setError('')
+        setError( '' )
+
+        const validationError = validate()
+        if ( validationError ) {
+            setError( validationError )
+            return
+        }
+
+        setLoading( true )
 
         try {
-            await registerStudent(formData)
-            navigate('/login')
-        } catch (err) {
-            setError(err.response?.data?.message || 'Something went wrong')
+            await registerStudent( formData )
+            navigate( '/login' )
+        } catch ( err ) {
+            setError( err.response?.data?.message || 'Something went wrong' )
         } finally {
-            setLoading(false)
+            setLoading( false )
         }
     }
 
