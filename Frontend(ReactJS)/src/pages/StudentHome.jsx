@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getMe, getAppointments, getStudentCourses } from '../services/api'
+import { useData } from '../context/DataContext'
 import CreateAppointment from '../components/CreateAppointment'
 import StudentNavbar from '../components/navbar/StudentNavbar'
 import '../styles/StudentHome.css'
@@ -10,46 +10,29 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarXmark, faBookOpen, faClockRotateLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 function StudentHome() {
-    const { logout }                                = useAuth()
-    const navigate                  = useNavigate()
-    const [ student, setStudent ]                   = useState( null )
-    const [ appointments, setAppointments ]  = useState( [] )
-    const [ courses, setCourses ]            = useState( [] )
-    const [ loading, setLoading ]          = useState( true )
-    const [ showForm, setShowForm ]        = useState( false )
+    const { logout }                                                    = useAuth()
+    const { student, appointments, courses, loading, fetchAll,
+            refreshAppointments }                                       = useData()
+    const navigate                                                      = useNavigate()
+    const [ showForm, setShowForm ]                                     = useState( false )
 
-    const fetchAppointments = () => {
-        getAppointments()
-            .then( res => setAppointments( res.data ) )
-            .catch( () => setAppointments( [] ) )
-    }
-
-    useEffect(() => {
-        Promise.all( [getMe(), getAppointments(), getStudentCourses() ] )
-            .then( ( [meRes, apptRes, coursesRes ] ) => {
-            setStudent( meRes.data )
-            setAppointments( apptRes.data )
-            setCourses( coursesRes.data  )
+    useEffect( () => {
+        fetchAll().catch( () => {
+            logout()
+            navigate( '/login' )
         } )
-            .catch( () => {
-                logout()
-                navigate( '/login' )
-            } )
-            .finally( () => setLoading( false ) )
-    } )
+    }, [] )
 
     const handleLogout = () => {
         logout()
         navigate( '/login' )
     }
 
-    // Sort ascending
     const upcomingAppointments = appointments
         .filter( a => new Date( a.appointment_date ) >= new Date() )
-        .sort(( a, b ) => new Date( a.appointment_date ) - new Date( b.appointment_date ) )
+        .sort( ( a, b ) => new Date( a.appointment_date ) - new Date( b.appointment_date ) )
         .slice( 0, 3 )
 
-    //  Sort descending
     const pastAppointments = appointments
         .filter( a => new Date( a.appointment_date ) < new Date() )
         .sort( ( a, b ) => new Date( b.appointment_date ) - new Date( a.appointment_date ) )
@@ -91,19 +74,20 @@ function StudentHome() {
             {/* Main Content */}
             <div className='home-content'>
 
-            <div className='create-appointment-wrapper'>
-                <button
-                    className='btn-make-appointment'
-                    onClick={() => setShowForm(!showForm)}
-                >
-                    <FontAwesomeIcon icon={faPlus} style={{ marginRight: '8px' }} />
-                    Make an Appointment
-                </button>
-                {showForm && <CreateAppointment onAppointmentCreated={() => {
-                    fetchAppointments()
-                    setShowForm(false)
-                }} />}
-            </div>
+                <div className='create-appointment-wrapper'>
+                    <button
+                        className='btn-make-appointment'
+                        onClick={() => setShowForm( !showForm )}
+                    >
+                        <FontAwesomeIcon icon={faPlus} style={{ marginRight: '8px' }} />
+                        Make an Appointment
+                    </button>
+                    {showForm && <CreateAppointment onAppointmentCreated={() => {
+                        refreshAppointments()
+                        setShowForm( false )
+                    }} />}
+                </div>
+
                 <div className='home-two-col'>
 
                     {/* Upcoming Appointments */}
@@ -117,7 +101,7 @@ function StudentHome() {
                                <p className='home-empty-text'>No upcoming appointments.</p>
                            </div>
                         ) : (
-                            upcomingAppointments.map(appointment => (
+                            upcomingAppointments.map( appointment => (
                                 <div key={appointment.id} className='appointment-item'>
                                     <div className='appointment-date-badge'>
                                         <span className='appointment-month'>
@@ -154,7 +138,7 @@ function StudentHome() {
                                 <p className='home-empty-text'>No courses enrolled yet.</p>
                             </div>
                         ) : (
-                            courses.map(course => (
+                            courses.map( course => (
                                 <div key={course.id} className='course-item'>
                                     <div className='course-icon'>
                                         {course.subject.slice(0, 2)}
@@ -180,7 +164,7 @@ function StudentHome() {
                             <p className='home-empty-text'>No past appointments yet.</p>
                         </div>
                     ) : (
-                        pastAppointments.map(appointment => (
+                        pastAppointments.map( appointment => (
                             <div key={appointment.id} className='appointment-item'>
                                 <div className='appointment-date-badge'>
                                     <span className='appointment-month'>
