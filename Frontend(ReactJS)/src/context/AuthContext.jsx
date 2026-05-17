@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useRef } from 'react'
+import {logoutStudent} from "../services/api.js";
 
 const AuthContext = createContext()
 
@@ -20,10 +21,17 @@ export function AuthProvider( { children } ) {
         localStorage.setItem( 'n_number', nNumber )
     }
 
-    const logout = () => {
-        localStorage.removeItem( 'access_token' )
-        localStorage.removeItem( 'n_number' )
-        if ( clearCacheRef.current ) clearCacheRef.current()
+    const logout = async () => {
+        try {
+            await logoutStudent()
+        } catch ( err ) {
+            // If the API call fails, proceed with local logout anyway
+            console.error( 'Logout API call failed:', err )
+        } finally {
+            localStorage.removeItem( 'access_token' )
+            localStorage.removeItem( 'n_number' )
+            if ( clearCacheRef.current ) clearCacheRef.current()
+        }
     }
 
     const isLoggedIn = () => !!localStorage.getItem( 'access_token' )

@@ -1,9 +1,11 @@
 import re
+from datetime import datetime, timezone
 
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 from app import db, bcrypt
 from app.models.student import Student
+from app.models.blacklisted_token import BlackListedToken
 
 auth_bp = Blueprint( 'auth', __name__ )
 
@@ -89,6 +91,21 @@ def login():
     access_token = create_access_token( identity=student.n_number )
 
     return jsonify( { 'access_token': access_token, 'n_number': student.n_number } ), 200
+
+# Logout — blacklist the current token
+@auth_bp.route( '/logout', methods=[ 'POST' ] )
+@jwt_required()
+def logout():
+    jwt_payload = get_jwt()
+    jti = jwt_payload[ 'jti' ]
+    expires_at  = datetime.fromtimestamp( jwt_payload[ 'exp' ], tz=timezone.utc )
+
+    blacklisted = BlackListedToken( jti=jti, expires_at=expires_at )
+
+    db.session.add( blacklisted )
+    db.session.commit()
+
+    return jsonify( { 'message': 'Logged out successfully' } ), 200
 
 # Get the current logged in student
 @auth_bp.route( '/me', methods=[ 'GET' ] )
