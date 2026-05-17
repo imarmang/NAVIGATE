@@ -13,9 +13,9 @@ appointments_bp = Blueprint('appointments', __name__)
 def get_appointments():
     n_number = get_jwt_identity()
 
-    appointments = Appointment.query.filter_by(n_number=n_number).all()
+    appointments = Appointment.query.filter_by( n_number=n_number ).all()
 
-    return jsonify([appointment.to_dict() for appointment in appointments]), 200
+    return jsonify( [ appointment.to_dict() for appointment in appointments ] ), 200
 
 
 # Create a new appointment
@@ -25,14 +25,25 @@ def create_appointment():
     n_number = get_jwt_identity()
     data = request.json
 
-    course = data.get('course')
-    subject = data.get('subject')
-    tutor_name = data.get('tutor_name')
-    tutor_email = data.get('tutor_email')
-    appointment_date = data.get('appointment_date')
+    course           = data.get( 'course', '' ).strip()
+    subject          = data.get( 'subject', '' ).strip()
+    tutor_name       = data.get( 'tutor_name' , '' ).strip()
+    tutor_email      = data.get( 'tutor_email', '' ).strip()
+    appointment_date = data.get( 'appointment_date', '' ).strip()
+
+    # Validate required fields
+    if not all( [ course, subject, tutor_name, tutor_email, appointment_date ] ):
+        return jsonify( { 'message': 'All fields are required' } ), 400
 
     # Convert the date string to a datetime object
-    appointment_date = datetime.strptime(appointment_date, '%Y-%m-%dT%H:%M')
+    try:
+        appointment_date = datetime.strptime(appointment_date, '%Y-%m-%dT%H:%M')
+    except ValueError:
+        return jsonify({'message': 'Appointment must be scheduled in the future'}), 400
+
+    # Validate appointment is in the future
+    if appointment_date <= datetime.now():
+        return jsonify( { 'message': 'Date must be in the future' } ), 400
 
     # Check if the student already has an appointment at this time
     existing_student_appointment = Appointment.query.filter_by(
@@ -41,7 +52,7 @@ def create_appointment():
     ).first()
 
     if existing_student_appointment:
-        return jsonify({'message': 'You already have an appointment at this time'}), 403
+        return jsonify( { 'message': 'You already have an appointment at this time' } ), 409
 
     # Check if the tutor already has an appointment at this time
     existing_tutor_appointment = Appointment.query.filter_by(
@@ -50,7 +61,7 @@ def create_appointment():
     ).first()
 
     if existing_tutor_appointment:
-        return jsonify({'message': 'Tutor is not available at this time'}), 403
+        return jsonify( { 'message': 'Tutor is not available at this time' } ), 409
 
     new_appointment = Appointment(
         n_number=n_number,
@@ -64,13 +75,13 @@ def create_appointment():
     db.session.add(new_appointment)
     db.session.commit()
 
-    return jsonify({'message': 'Appointment created successfully'}), 200
+    return jsonify( { 'message': 'Appointment created successfully' } ), 201
 
 
 # Delete an appointment
-@appointments_bp.route('/<int:appointment_id>', methods=['DELETE'])
+@appointments_bp.route( '/<int:appointment_id>', methods=[ 'DELETE' ] )
 @jwt_required()
-def delete_appointment(appointment_id):
+def delete_appointment( appointment_id ):
     n_number = get_jwt_identity()
 
     appointment = Appointment.query.filter_by(
@@ -79,22 +90,22 @@ def delete_appointment(appointment_id):
     ).first()
 
     if not appointment:
-        return jsonify({'message': 'Appointment not found'}), 404
+        return jsonify( { 'message': 'Appointment not found' } ), 404
 
-    db.session.delete(appointment)
+    db.session.delete( appointment )
     db.session.commit()
 
-    return jsonify({'message': 'Appointment deleted successfully'}), 200
+    return jsonify( { 'message': 'Appointment deleted successfully' } ), 200
 
 
 # Update appointment message
-@appointments_bp.route('/<int:appointment_id>/message', methods=['PUT'])
+@appointments_bp.route( '/<int:appointment_id>/message', methods=[ 'PUT' ] )
 @jwt_required()
-def update_message(appointment_id):
+def update_message( appointment_id ):
     n_number = get_jwt_identity()
     data = request.json
 
-    message = data.get('message')
+    message = data.get( 'message' )
 
     appointment = Appointment.query.filter_by(
         id=appointment_id,
@@ -102,9 +113,15 @@ def update_message(appointment_id):
     ).first()
 
     if not appointment:
-        return jsonify({'message': 'Appointment not found'}), 404
+        return jsonify( { 'message': 'Appointment not found' } ), 404
 
     appointment.message = message
     db.session.commit()
 
-    return jsonify({'message': 'Message updated successfully'}), 200
+    return jsonify( { 'message': 'Message updated successfully' } ), 200
+
+# 200 - OK Status Code
+# 400 - Bad Request, syntax error, invalid framing
+# 404 - NOT FOUND Status Code
+# 409 - errors sent to the client so that a user might be able to resolve a conflict and resubmit the request
+
