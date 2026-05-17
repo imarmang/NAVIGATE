@@ -10,49 +10,51 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarXmark, faBookOpen, faClockRotateLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 function StudentHome() {
-    const { logout } = useAuth()
-    const navigate = useNavigate()
-    const [student, setStudent] = useState(null)
-    const [appointments, setAppointments] = useState([])
-    const [courses, setCourses] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [showForm, setShowForm] = useState(false)
+    const { logout }                                = useAuth()
+    const navigate                  = useNavigate()
+    const [ student, setStudent ]                   = useState( null )
+    const [ appointments, setAppointments ]  = useState( [] )
+    const [ courses, setCourses ]            = useState( [] )
+    const [ loading, setLoading ]          = useState( true )
+    const [ showForm, setShowForm ]        = useState( false )
 
     const fetchAppointments = () => {
         getAppointments()
-            .then(res => setAppointments(res.data))
+            .then( res => setAppointments( res.data ) )
+            .catch( () => setAppointments( [] ) )
     }
 
     useEffect(() => {
-        getMe()
-            .then(res => setStudent(res.data))
-            .catch(() => {
+        Promise.all( [getMe(), getAppointments(), getStudentCourses() ] )
+            .then( ( [meRes, apptRes, coursesRes ] ) => {
+            setStudent( meRes.data )
+            setAppointments( apptRes.data )
+            setCourses( coursesRes.data  )
+        } )
+            .catch( () => {
                 logout()
-                navigate('/login')
-            })
-
-        fetchAppointments()
-
-        getStudentCourses()
-            .then(res => setCourses(res.data))
-            .finally(() => setLoading(false))
-    }, [])
+                navigate( '/login' )
+            } )
+            .finally( () => setLoading( false ) )
+    } )
 
     const handleLogout = () => {
         logout()
-        navigate('/login')
+        navigate( '/login' )
     }
 
+    // Sort ascending
     const upcomingAppointments = appointments
-        .filter(a => new Date(a.appointment_date) >= new Date())
-        .sort((a, b) => new Date(a.appointment_date) - new Date(b.appointment_date))
-        .slice(0, 3)
+        .filter( a => new Date( a.appointment_date ) >= new Date() )
+        .sort(( a, b ) => new Date( a.appointment_date ) - new Date( b.appointment_date ) )
+        .slice( 0, 3 )
 
+    //  Sort descending
     const pastAppointments = appointments
-        .filter(a => new Date(a.appointment_date) < new Date())
-        .sort((a, b) => new Date(b.appointment_date) - new Date(a.appointment_date))
+        .filter( a => new Date( a.appointment_date ) < new Date() )
+        .sort( ( a, b ) => new Date( b.appointment_date ) - new Date( a.appointment_date ) )
 
-    if (loading) return <p>Loading...</p>
+    if ( loading ) return <p>Loading...</p>
 
     return (
         <div className='home-wrapper'>

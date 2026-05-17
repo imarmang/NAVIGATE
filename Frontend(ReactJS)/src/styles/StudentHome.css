@@ -504,3 +504,50 @@
     text-align: center;
     width: 100%;
 }
+/* ── Responsive ── */
+@media ( max-width: 768px ) {
+
+    /* Hero — stack title and stats vertically */
+    .home-hero {
+        height: auto;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 24px 20px;
+        gap: 20px;
+    }
+
+    .home-hero-stats {
+        position: static;
+        width: 100%;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .home-hero-stat {
+        flex: 1;
+        padding: 12px 8px;
+    }
+
+    .home-hero-stat-number {
+        font-size: 22px;
+    }
+
+    .home-hero-title {
+        font-size: 22px;
+    }
+
+    /* Single column card grid */
+    .home-two-col {
+        grid-template-columns: 1fr;
+    }
+
+    /* Reduce content padding */
+    .home-content {
+        padding: 20px 16px;
+    }
+
+    /* Create form — single column */
+    .create-form-grid {
+        grid-template-columns: 1fr;
+    }
+}

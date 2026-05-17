@@ -6,27 +6,40 @@ import nsuBackground from '../assets/nsuBackground.jpeg'
 import '../styles/StudentLogin.css'
 
 function StudentLogin() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
-    const [loading, setLoading] = useState(false)
+    const [ email, setEmail ]        = useState( '' )
+    const [ password, setPassword ]  = useState( '' )
+    const [ error, setError ]        = useState( '' )
+    const [ loading, setLoading ]  = useState( false )
 
     const { login } = useAuth()
     const navigate = useNavigate()
 
-    const handleSubmit = async (e) => {
+    const validate = () => {
+        if ( !email.trim() || !password ) {
+            return 'Email and password are required'
+        }
+        return null
+    }
+
+    const handleSubmit = async ( e ) => {
         e.preventDefault()
-        setLoading(true)
-        setError('')
+        setError( '' )
+
+        const validationError = validate()
+        if ( validationError ) {
+            setError( validationError )
+            return
+        }
+        setLoading( true )
 
         try {
-            const res = await loginStudent({ email, password })
-            login(res.data.access_token)
-            navigate('/home')
-        } catch (err) {
-            setError('Invalid email or password')
+            const res = await loginStudent( { email, password } )
+            login( res.data.access_token, res.data.n_number )
+            navigate( '/home' )
+        } catch ( err ) {
+            setError( 'Invalid email or password' )
         } finally {
-            setLoading(false)
+            setLoading( false )
         }
     }
 
