@@ -69,3 +69,4 @@ VITE_API_URL=http://localhost:5000
 ```bash
 npm run dev
 ```
+This project is licensed under the [MIT License](LICENSE).
