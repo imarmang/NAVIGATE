@@ -4,6 +4,10 @@ import {getAppointments, getMe, getStudentCourses} from "../services/api.js";
 
 const DataContext = createContext()
 
+const MINIMUM_LOADING_MS = 1500
+
+const delay = ( ms ) => new Promise( resolve => setTimeout( resolve, ms ) )
+
 export function DataProvider( { children } ) {
     const { registerClearCache } = useAuth()
 
@@ -23,7 +27,8 @@ export function DataProvider( { children } ) {
             const [meRes, apptRes, coursesRes ] = await Promise.all( [
                 getMe(),
                 getAppointments(),
-                getStudentCourses()
+                getStudentCourses(),
+                delay( MINIMUM_LOADING_MS )
             ] )
 
             setStudent( meRes.data )

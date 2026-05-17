@@ -8,6 +8,7 @@ import '../styles/StudentHome.css'
 import nsuBackground from '../assets/nsuBackground.jpeg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarXmark, faBookOpen, faClockRotateLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
+import LoadingScreen from "../components/LoadingScreen.jsx";
 
 function StudentHome() {
     const { logout }                                                    = useAuth()
@@ -37,7 +38,7 @@ function StudentHome() {
         .filter( a => new Date( a.appointment_date ) < new Date() )
         .sort( ( a, b ) => new Date( b.appointment_date ) - new Date( a.appointment_date ) )
 
-    if ( loading ) return <p>Loading...</p>
+    if ( loading ) return <LoadingScreen message="Logging you in..." />
 
     return (
         <div className='home-wrapper'>
