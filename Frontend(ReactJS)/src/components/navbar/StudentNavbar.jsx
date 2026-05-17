@@ -1,22 +1,33 @@
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse, faCalendar, faBook, faGear, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import LoadingScreen from '../LoadingScreen'
 import '../../styles/navbarcss/StudentNavbar.css'
 
 function StudentNavbar({ student, onLogout }) {
-    const navigate = useNavigate()
-    const location = useLocation()
+    const navigate                        = useNavigate()
+    const location                        = useLocation()
+    const [ loggingOut, setLoggingOut ]   = useState( false )
 
     const navLinks = [
-        { label: 'Home', path: '/home', icon: faHouse },
+        { label: 'Home',         path: '/home',         icon: faHouse    },
         { label: 'Appointments', path: '/appointments', icon: faCalendar },
-        { label: 'Courses', path: '/courses', icon: faBook },
-        { label: 'Settings', path: '/settings', icon: faGear },
+        { label: 'Courses',      path: '/courses',      icon: faBook     },
+        { label: 'Settings',     path: '/settings',     icon: faGear     },
     ]
 
     const initials = student
         ? `${student.first_name?.[0]}${student.last_name?.[0]}`
         : ''
+
+    const handleLogout = async () => {
+        setLoggingOut( true )
+        await new Promise( resolve => setTimeout( resolve, 1500 ) )
+        onLogout()
+    }
+
+    if ( loggingOut ) return <LoadingScreen message='Logging out...' />
 
     return (
         <nav className='student-navbar'>
@@ -43,7 +54,7 @@ function StudentNavbar({ student, onLogout }) {
                 <span className='student-navbar-name'>
                     {student?.first_name} {student?.last_name}
                 </span>
-                <button className='student-navbar-logout' onClick={onLogout} title='Logout'>
+                <button className='student-navbar-logout' onClick={handleLogout} title='Logout'>
                     <FontAwesomeIcon icon={faRightFromBracket} />
                 </button>
             </div>
