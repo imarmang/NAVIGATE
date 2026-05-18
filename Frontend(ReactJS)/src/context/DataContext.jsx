@@ -1,8 +1,9 @@
-import { useAuth } from "./AuthContext.jsx";
-import {createContext, useCallback, useContext, useEffect, useState} from "react";
+import { useAuth } from '../hooks/useAuth.js'
+
+import {createContext, useCallback, useEffect, useState} from "react";
 import {getAppointments, getMe, getStudentCourses} from "../services/api.js";
 
-const DataContext = createContext()
+export const DataContext = createContext()
 
 const MINIMUM_LOADING_MS = 1500
 
@@ -74,8 +75,4 @@ export function DataProvider( { children } ) {
             { children }
         </DataContext.Provider>
     )
-}
-
-export function useData() {
-    return useContext( DataContext )
 }

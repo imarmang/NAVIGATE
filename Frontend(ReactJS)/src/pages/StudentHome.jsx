@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { useData } from '../context/DataContext'
+import { useAuth } from '../hooks/useAuth.js'
+import { useData } from '../hooks/useData.js'
 import CreateAppointment from '../components/CreateAppointment'
 import StudentNavbar from '../components/navbar/StudentNavbar'
 import '../styles/StudentHome.css'
@@ -24,8 +24,8 @@ function StudentHome() {
         } )
     }, [] )
 
-    const handleLogout = () => {
-        logout()
+    const handleLogout = async() => {
+        await logout()
         navigate( '/login' )
     }
 
@@ -53,7 +53,7 @@ function StudentHome() {
                         Welcome back, {student?.first_name}!
                     </h1>
                     <p className='home-hero-sub'>
-                        Here is your academic dashboard for {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}.
+                        Here is your academic dashboard for { new Date().toLocaleString('default', { month: 'long', year: 'numeric' } ) }.
                     </p>
                 </div>
                 <div className='home-hero-stats'>

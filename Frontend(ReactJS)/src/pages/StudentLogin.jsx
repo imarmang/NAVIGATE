@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { loginStudent } from '../services/api'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../hooks/useAuth.js'
 import nsuBackground from '../assets/nsuBackground.jpeg'
 import '../styles/StudentLogin.css'
 

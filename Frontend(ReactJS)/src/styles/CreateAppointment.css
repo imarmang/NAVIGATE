@@ -1,0 +1,370 @@
+ @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.ca-wrapper {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ── Header ── */
+.ca-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ca-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2F4263;
+    margin: 0;
+}
+
+.ca-close {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #9ba8bb;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+
+.ca-close:hover { color: #2F4263; }
+
+/* ── Error ── */
+.ca-error {
+    font-size: 13px;
+    color: #E24B4A;
+    background: #FCEBEB;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 0;
+}
+
+/* ── No Courses ── */
+.ca-no-courses {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 0;
+    text-align: center;
+}
+
+.ca-no-courses-text {
+    font-size: 14px;
+    color: #506B90;
+    margin: 0;
+}
+
+.ca-no-courses-btn {
+    background: #2F4263;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.ca-no-courses-btn:hover { background: #3a5278; }
+
+/* ── Step ── */
+.ca-step {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 4px;
+    border-top: 1px solid #f0f2f7;
+}
+
+.ca-step-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #2F4263;
+    margin: 0;
+}
+
+.ca-step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #2F4263;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.ca-step-hint {
+    font-size: 11px;
+    font-weight: 400;
+    color: #9ba8bb;
+    margin-left: auto;
+}
+
+.ca-step-empty {
+    font-size: 13px;
+    color: #9ba8bb;
+    margin: 0;
+}
+
+/* ── Option buttons (courses + instructors) ── */
+.ca-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ca-option-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid #dde3ef;
+    border-radius: 8px;
+    background: #f8f9fc;
+    font-size: 13px;
+    font-weight: 500;
+    color: #506B90;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.ca-option-btn:hover {
+    border-color: #2F4263;
+    color: #2F4263;
+}
+
+.ca-option-btn.active {
+    border-color: #2F4263;
+    background: #2F4263;
+    color: #ffffff;
+}
+
+/* ── Instructor role badges ── */
+.ca-instructor-name {
+    font-weight: 500;
+}
+
+.ca-instructor-role {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.ca-instructor-role.prof {
+    background: rgba( 47, 66, 99, 0.12 );
+    color: #2F4263;
+}
+
+.ca-instructor-role.si {
+    background: rgba( 59, 109, 17, 0.12 );
+    color: #3B6D11;
+}
+
+.ca-option-btn.active .ca-instructor-role.prof,
+.ca-option-btn.active .ca-instructor-role.si {
+    background: rgba( 255, 255, 255, 0.2 );
+    color: #ffffff;
+}
+
+/* ── Date input ── */
+.ca-date-input {
+    padding: 10px 14px;
+    border: 1px solid #dde3ef;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    color: #2F4263;
+    background: #f8f9fc;
+    outline: none;
+    max-width: 200px;
+    transition: border-color 0.2s;
+}
+
+.ca-date-input:focus {
+    border-color: #2F4263;
+    background: #ffffff;
+}
+
+/* ── Time grid ── */
+.ca-time-grid {
+    display: grid;
+    grid-template-columns: repeat( auto-fill, minmax( 100px, 1fr ) );
+    gap: 8px;
+}
+
+.ca-time-btn {
+    padding: 8px 0;
+    border: 1px solid #dde3ef;
+    border-radius: 8px;
+    background: #f8f9fc;
+    font-size: 12px;
+    font-weight: 500;
+    color: #506B90;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+    text-align: center;
+}
+
+.ca-time-btn:hover:not(.booked) {
+    border-color: #2F4263;
+    color: #2F4263;
+}
+
+.ca-time-btn.active {
+    border-color: #2F4263;
+    background: #2F4263;
+    color: #ffffff;
+}
+
+.ca-time-btn.booked {
+    background: #f1f3f8;
+    color: #c5ccd8;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+/* ── Textarea ── */
+.ca-textarea {
+    padding: 10px 14px;
+    border: 1px solid #dde3ef;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    color: #2F4263;
+    background: #f8f9fc;
+    outline: none;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+}
+
+.ca-textarea:focus {
+    border-color: #2F4263;
+    background: #ffffff;
+}
+
+/* ── Review button ── */
+.ca-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ca-btn-continue {
+    background: #2F4263;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 24px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.ca-btn-continue:hover { background: #3a5278; }
+
+/* ── Confirmation screen ── */
+.ca-confirm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f8f9fc;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.ca-confirm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.ca-confirm-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #9ba8bb;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 80px;
+}
+
+.ca-confirm-value {
+    font-size: 13px;
+    font-weight: 500;
+    color: #2F4263;
+    text-align: right;
+}
+
+.ca-confirm-message {
+    font-style: italic;
+    font-weight: 400;
+    color: #506B90;
+}
+
+.ca-confirm-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.ca-btn-back {
+    background: none;
+    border: 1px solid #dde3ef;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #506B90;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.ca-btn-back:hover { border-color: #2F4263; color: #2F4263; }
+.ca-btn-back:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ca-btn-confirm {
+    background: #2F4263;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.ca-btn-confirm:hover { background: #3a5278; }
+.ca-btn-confirm:disabled { background: #9ba8bb; cursor: not-allowed; }
+
+/* ── Responsive ── */
+@media ( max-width: 768px ) {
+    .ca-time-grid {
+        grid-template-columns: repeat( auto-fill, minmax( 80px, 1fr ) );
+    }
+}

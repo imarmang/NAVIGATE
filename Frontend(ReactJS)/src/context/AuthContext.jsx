@@ -1,7 +1,7 @@
-import { createContext, useContext, useState, useEffect, useRef } from 'react'
-import {logoutStudent} from "../services/api.js";
+import { createContext, useState, useEffect, useRef } from 'react'
+import { logoutStudent } from '../services/api'
 
-const AuthContext = createContext()
+export const AuthContext = createContext()
 
 export function AuthProvider( { children } ) {
     const [ loading, setLoading ]   = useState( true )
@@ -25,7 +25,6 @@ export function AuthProvider( { children } ) {
         try {
             await logoutStudent()
         } catch ( err ) {
-            // If the API call fails, proceed with local logout anyway
             console.error( 'Logout API call failed:', err )
         } finally {
             localStorage.removeItem( 'access_token' )
@@ -41,8 +40,4 @@ export function AuthProvider( { children } ) {
             { children }
         </AuthContext.Provider>
     )
-}
-
-export function useAuth() {
-    return useContext( AuthContext )
 }
