@@ -7,6 +7,7 @@ import Register from './pages/Register'
 import StudentHome from './pages/StudentHome'
 import Landing from './pages/Landing'
 import AppointmentsPage from "./pages/Appointments.jsx";
+import CoursesPage from "./pages/Courses.jsx";
 
 function App() {
     return (
@@ -32,7 +33,7 @@ function App() {
                         } />
                         <Route path='/courses' element={
                             <ProtectedRoute>
-                                <StudentHome />
+                                <CoursesPage />
                             </ProtectedRoute>
                         } />
                         <Route path='/settings' element={

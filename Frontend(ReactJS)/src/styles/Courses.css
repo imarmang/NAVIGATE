@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.courses-wrapper {
+    background: #f5f6fa;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+.courses-content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 100px 24px 40px;
+}
+
+/* ── Header ── */
+.courses-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.courses-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2F4263;
+    margin: 0 0 4px 0;
+}
+
+.courses-subtitle {
+    font-size: 13px;
+    color: #9ba8bb;
+    margin: 0;
+}
+
+.courses-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.courses-error {
+    font-size: 13px;
+    color: #E24B4A;
+    margin: 0;
+}
+
+.courses-saved {
+    font-size: 13px;
+    color: #3B6D11;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+}
+
+.courses-save-btn {
+    background: #2F4263;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+}
+
+.courses-save-btn:hover:not(:disabled) { background: #3a5278; }
+.courses-save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Two column grid ── */
+.courses-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* ── Card ── */
+.courses-card {
+    background: #ffffff;
+    border: 1px solid #e8ecf4;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.courses-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2F4263;
+    margin: 0 0 16px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ── Empty state ── */
+.courses-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 0;
+    gap: 8px;
+    color: #9ba8bb;
+    text-align: center;
+}
+
+.courses-empty-icon {
+    font-size: 28px;
+    color: #d0d5e8;
+}
+
+.courses-empty p {
+    font-size: 13px;
+    margin: 0;
+}
+
+.courses-empty-hint {
+    font-size: 12px;
+    color: #c5ccd8;
+}
+
+/* ── Course list ── */
+.courses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.course-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid #e8ecf4;
+    border-radius: 10px;
+    transition: border-color 0.15s;
+}
+
+.course-item:hover { border-color: #c5ccd8; }
+
+.course-item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: #2F4263;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.course-item-icon.available {
+    background: #e8ecf4;
+    color: #9ba8bb;
+}
+
+.course-item-info {
+    flex: 1;
+}
+
+.course-item-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #2F4263;
+    margin: 0;
+}
+
+/* ── Add / Remove buttons ── */
+.course-item-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+}
+
+.course-item-btn.add {
+    background: #EAF3DE;
+    color: #3B6D11;
+}
+
+.course-item-btn.add:hover {
+    background: #3B6D11;
+    color: #ffffff;
+}
+
+.course-item-btn.remove {
+    background: #FCEBEB;
+    color: #E24B4A;
+}
+
+.course-item-btn.remove:hover {
+    background: #E24B4A;
+    color: #ffffff;
+}
+
+/* ── Responsive ── */
+@media ( max-width: 768px ) {
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .courses-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .courses-header-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
