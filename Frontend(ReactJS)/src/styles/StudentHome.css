@@ -8,25 +8,26 @@
 .home-wrapper {
     background: #f5f6fa;
     min-height: 100vh;
+    overflow: hidden;
 }
 
 /* ── Hero ── */
 .home-hero {
     margin-top: 64px;
-    height: 200px;
+    height: 220px;
     background-size: cover;
     background-position: center;
     position: relative;
     display: flex;
     align-items: center;
-    padding: 0 40px;
+    padding: 0 48px;
     overflow: hidden;
 }
 
 .home-hero-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(47, 66, 99, 0.75);
+    background: rgba( 47, 66, 99, 0.78 );
 }
 
 .home-hero-content {
@@ -34,520 +35,241 @@
     z-index: 1;
 }
 
+.home-hero-date {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba( 255, 255, 255, 0.6 );
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 8px 0;
+}
+
 .home-hero-title {
-    color: #fff;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 700;
-    margin-bottom: 8px;
+    color: #ffffff;
+    margin: 0 0 8px 0;
 }
 
 .home-hero-sub {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 300;
+    color: rgba( 255, 255, 255, 0.65 );
+    margin: 0;
 }
 
-.home-hero-stats {
-    position: absolute;
-    right: 40px;
-    display: flex;
-    gap: 24px;
-    z-index: 1;
-}
-
-.home-hero-stat {
-    text-align: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 16px 24px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.home-hero-stat-number {
-    font-size: 28px;
-    font-weight: 700;
-    color: #fff;
-    display: block;
-}
-
-.home-hero-stat-label {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.7);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* ── Main Content ── */
+/* ── Content ── */
 .home-content {
-    padding: 40px;
-    max-width: 1200px;
+    max-width: 960px;
     margin: 0 auto;
+    padding: 32px 24px 40px;
 }
 
-/* ── Cards ── */
+/* ── Card ── */
 .home-card {
-    background: #fff;
-    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e8ecf4;
+    border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f0f0f0;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .home-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     margin-bottom: 20px;
 }
 
 .home-card-title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
-    color: #1a1a2e;
-    margin: 0;
-}
-
-.home-card-action {
-    font-size: 13px;
     color: #2F4263;
-    font-weight: 500;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-}
-
-.home-card-action:hover {
-    text-decoration: underline;
-}
-
-/* ── Two column grid ── */
-.home-two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-bottom: 24px;
-}
-
-/* ── Empty state ── */
-.home-empty {
-    text-align: center;
-    padding: 32px 0;
-}
-
-.home-empty-text {
-    font-size: 13px;
-    color: #888;
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.home-empty-action {
-    margin-top: 12px;
-    height: 36px;
-    padding: 0 20px;
-    background: #2F4263;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 13px;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-    transition: background .2s;
+.home-card-icon {
+    font-size: 14px;
+    color: #9ba8bb;
 }
 
-.home-empty-action:hover {
-    background: #506B90;
+/* ── Profile ── */
+.home-profile-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-/* ── Appointment items ── */
-.appointment-item {
+.home-profile-row {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 12px 0;
-    border-bottom: 1px solid #f0f0f0;
 }
 
-.appointment-item:last-child {
-    border-bottom: none;
-}
-
-.appointment-date-badge {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    background: #f0f3fa;
-    border-radius: 10px;
+.home-profile-icon {
+    font-size: 15px;
+    color: #9ba8bb;
+    width: 20px;
     flex-shrink: 0;
 }
 
-.appointment-month {
-    font-size: 10px;
-    font-weight: 600;
-    color: #2F4263;
+.home-profile-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #9ba8bb;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 2px 0;
 }
 
-.appointment-day {
+.home-profile-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2F4263;
+    margin: 0;
+}
+
+/* ── Stat cards ── */
+.home-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.home-stat-card {
+    background: #ffffff;
+    border: 1px solid #e8ecf4;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.home-stat-card:hover {
+    border-color: #2F4263;
+    box-shadow: 0 4px 16px rgba( 47, 66, 99, 0.08 );
+}
+
+.home-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 18px;
+    flex-shrink: 0;
+}
+
+.home-stat-icon.appointments {
+    background: rgba( 47, 66, 99, 0.1 );
+    color: #2F4263;
+}
+
+.home-stat-icon.courses {
+    background: rgba( 59, 109, 17, 0.1 );
+    color: #3B6D11;
+}
+
+.home-stat-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.home-stat-number {
+    font-size: 24px;
     font-weight: 700;
     color: #2F4263;
     line-height: 1;
 }
 
-.appointment-info {
-    flex: 1;
+.home-stat-label {
+    font-size: 12px;
+    color: #9ba8bb;
 }
 
-.appointment-course {
-    font-size: 14px;
+.home-stat-link {
+    font-size: 12px;
     font-weight: 500;
-    color: #1a1a2e;
-    margin: 0 0 2px 0;
+    color: #9ba8bb;
+    white-space: nowrap;
+    transition: color 0.15s;
 }
 
-.appointment-tutor {
-    font-size: 12px;
-    color: #888;
-    margin: 0;
-}
-
-.appointment-time-badge {
-    font-size: 12px;
+.home-stat-card:hover .home-stat-link {
     color: #2F4263;
-    background: #f0f3fa;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: 500;
 }
 
-/* ── Course items ── */
-.course-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.course-item:last-child {
-    border-bottom: none;
-}
-
-.course-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: #2F4263;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.course-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: #1a1a2e;
-    margin: 0;
-}
-
-/* ── Make Appointment button ── */
-.btn-make-appointment {
-    height: 40px;
-    padding: 0 24px;
-    background: #2F4263;
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 500;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-    transition: background .2s;
-    margin-bottom: 24px;
-}
-
-.btn-make-appointment:hover {
-    background: #506B90;
-}
-
-/* ── Create Appointment form ── */
-.create-appointment-wrapper {
-    margin-bottom: 24px;
-}
-
-.create-form-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f0f0f0;
-    margin-top: 16px;
-}
-
-.create-form-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1a1a2e;
-    margin-bottom: 20px;
-}
-
-.create-form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-}
-
-.create-form-label {
-    font-size: 12px;
-    color: #888;
-    margin-bottom: 6px;
-    display: block;
-}
-
-.create-form-input {
-    width: 100%;
-    height: 40px;
-    border: 1.5px solid #e8e8e8;
-    border-radius: 8px;
-    padding: 0 12px;
-    font-size: 13px;
-    font-family: 'Poppins', sans-serif;
-    color: #333;
-    outline: none;
-    background: #fafafa;
-    transition: border-color .2s;
-}
-
-.create-form-input:focus {
-    border-color: #2F4263;
-    background: #fff;
-}
-
-.create-form-buttons {
-    display: flex;
-    gap: 12px;
-}
-
-.btn-create {
-    height: 40px;
-    padding: 0 24px;
-    background: #2F4263;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 500;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-    transition: background .2s;
-}
-
-.btn-create:hover {
-    background: #506B90;
-}
-
-.btn-create:disabled {
-    background: #506B90;
-    cursor: not-allowed;
-}
-
-.btn-cancel {
-    height: 40px;
-    padding: 0 24px;
-    background: transparent;
-    border: 1px solid #e8e8e8;
-    border-radius: 8px;
-    color: #555;
-    font-size: 13px;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-    transition: background .2s;
-}
-
-.btn-cancel:hover {
-    background: #f5f6fa;
-}
-
-.create-form-error {
-    font-size: 13px;
-    color: #e74c3c;
-    margin-bottom: 16px;
-    background: #fdf0f0;
-    padding: 10px 14px;
-    border-radius: 8px;
-}
-
-/* ── Modal ── */
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-}
-
-.modal-box {
-    background: #fff;
-    border-radius: 16px;
-    padding: 32px;
-    width: 440px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-}
-
-.modal-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1a1a2e;
-    margin-bottom: 20px;
-}
-
-.modal-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 14px;
-}
-
-.modal-label {
-    color: #888;
-    font-weight: 400;
-}
-
-.modal-value {
-    color: #1a1a2e;
-    font-weight: 500;
-}
-
-.modal-textarea {
-    width: 100%;
-    height: 80px;
-    border: 1.5px solid #e8e8e8;
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 13px;
-    font-family: 'Poppins', sans-serif;
-    color: #333;
-    outline: none;
-    resize: none;
-    margin-top: 16px;
-    transition: border-color .2s;
-}
-
-.modal-textarea:focus {
-    border-color: #2F4263;
-}
-
-.modal-buttons {
-    display: flex;
-    gap: 12px;
-    margin-top: 16px;
-}
-
-.modal-btn-save {
-    flex: 1;
-    height: 40px;
-    background: #2F4263;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 500;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-    transition: background .2s;
-}
-
-.modal-btn-save:hover {
-    background: #506B90;
-}
-
-.modal-btn-save:disabled {
-    background: #506B90;
-    cursor: not-allowed;
-}
-
-.modal-btn-close {
-    flex: 1;
-    height: 40px;
-    background: transparent;
-    border: 1px solid #e8e8e8;
-    border-radius: 8px;
-    color: #555;
-    font-size: 13px;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-    transition: background .2s;
-}
-
-.modal-btn-close:hover {
-    background: #f5f6fa;
-}
-
-.home-empty-fa-icon {
-    font-size: 32px;
-    color: #d0d5e8;
-    margin-bottom: 12px;
-    display: block;
-    text-align: center;
-    width: 100%;
-}
 /* ── Responsive ── */
 @media ( max-width: 768px ) {
 
-    /* Hero — stack title and stats vertically */
     .home-hero {
         height: auto;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 24px 20px;
-        gap: 20px;
-    }
-
-    .home-hero-stats {
-        position: static;
-        width: 100%;
-        justify-content: space-between;
-        gap: 12px;
-    }
-
-    .home-hero-stat {
-        flex: 1;
-        padding: 12px 8px;
-    }
-
-    .home-hero-stat-number {
-        font-size: 22px;
+        padding: 32px 24px;
     }
 
     .home-hero-title {
         font-size: 22px;
     }
 
-    /* Single column card grid */
-    .home-two-col {
+    .home-stats-grid {
         grid-template-columns: 1fr;
     }
 
-    /* Reduce content padding */
     .home-content {
-        padding: 20px 16px;
+        padding: 24px 16px 32px;
     }
+}
 
-    /* Create form — single column */
-    .create-form-grid {
-        grid-template-columns: 1fr;
-    }
+/* ── Avatar ── */
+.home-profile-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.home-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #2F4263;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: 1px;
+}
+
+.home-avatar-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.home-avatar-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2F4263;
+    margin: 0;
+}
+
+.home-avatar-sub {
+    font-size: 13px;
+    color: #9ba8bb;
+    margin: 0;
+}
+
+.home-profile-divider {
+    height: 1px;
+    background: #f0f2f7;
+    margin-bottom: 20px;
 }

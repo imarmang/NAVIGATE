@@ -6,46 +6,65 @@
     font-family: 'Poppins', sans-serif;
 }
 
-.appointments-content {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 100px 24px 40px;
-}
-
-/* ── Header ── */
-.appointments-header {
+/* ── Hero ── */
+.appointments-hero {
+    margin-top: 64px;
+    height: 220px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    gap: 16px;
+    padding: 0 48px;
+    overflow: hidden;
 }
 
-.appointments-title {
-    font-size: 24px;
+.appointments-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba( 47, 66, 99, 0.78 );
+}
+
+.appointments-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.appointments-hero-title {
+    font-size: 28px;
     font-weight: 700;
-    color: #2F4263;
-    margin: 0 0 4px 0;
+    color: #ffffff;
+    margin: 0 0 6px 0;
 }
 
-.appointments-subtitle {
+.appointments-hero-sub {
     font-size: 13px;
-    color: #9ba8bb;
+    font-weight: 300;
+    color: rgba( 255, 255, 255, 0.65 );
     margin: 0;
 }
 
-.appointments-header-right {
+.appointments-hero-actions {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
+/* ── Content ── */
+.appointments-content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 40px;
+}
+
 /* ── View Toggle ── */
 .appointments-view-toggle {
     display: flex;
-    background: #ffffff;
-    border: 1px solid #dde3ef;
+    background: rgba( 255, 255, 255, 0.15 );
+    border: 1px solid rgba( 255, 255, 255, 0.25 );
     border-radius: 8px;
     overflow: hidden;
 }
@@ -58,7 +77,7 @@
     font-size: 13px;
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
-    color: #9ba8bb;
+    color: rgba( 255, 255, 255, 0.7 );
     background: none;
     border: none;
     cursor: pointer;
@@ -66,7 +85,7 @@
 }
 
 .toggle-btn.active {
-    background: #2F4263;
+    background: rgba( 255, 255, 255, 0.25 );
     color: #ffffff;
 }
 
@@ -75,20 +94,20 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: #2F4263;
-    color: #ffffff;
+    background: #ffffff;
+    color: #2F4263;
     border: none;
     border-radius: 8px;
     padding: 10px 18px;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
     transition: background 0.2s;
 }
 
 .appointments-new-btn:hover {
-    background: #3a5278;
+    background: #f0f3fa;
 }
 
 /* ── Card ── */
@@ -223,7 +242,29 @@
     color: #9ba8bb;
 }
 
-/* ── Calendar styles ── */
+/* ── Modal ── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba( 0, 0, 0, 0.45 );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal-box {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px;
+    width: 90%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba( 0, 0, 0, 0.2 );
+}
+
+/* ── Calendar ── */
 .calendar-container {
     font-family: 'Poppins', sans-serif;
 }
@@ -324,12 +365,15 @@
 
 /* ── Responsive ── */
 @media ( max-width: 768px ) {
-    .appointments-header {
+    .appointments-hero {
+        height: auto;
         flex-direction: column;
         align-items: flex-start;
+        padding: 24px 20px;
+        gap: 16px;
     }
 
-    .appointments-header-right {
+    .appointments-hero-actions {
         width: 100%;
         justify-content: space-between;
     }

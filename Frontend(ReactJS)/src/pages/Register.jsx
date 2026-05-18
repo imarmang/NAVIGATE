@@ -93,7 +93,7 @@ function Register() {
                     <div className='register-logo'>N.A.V.I.G.A.T.E.</div>
                     <div className='register-divider' />
                     <p className='register-tagline'>
-                        Nova Southeastern University's academic guidance and tutoring system.
+                        Network for Academic Visits, Instruction, Guidance, Advising, Tutoring, and Engagement.
                     </p>
                     <div className='register-nsu-badge'>Nova Southeastern University</div>
                 </div>

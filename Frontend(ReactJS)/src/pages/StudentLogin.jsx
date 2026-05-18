@@ -64,7 +64,7 @@ function StudentLogin() {
                     <div className='login-logo'>N.A.V.I.G.A.T.E.</div>
                     <div className='login-divider' />
                     <p className='login-tagline'>
-                        Nova Southeastern University's academic guidance and tutoring system.
+                        Network for Academic Visits, Instruction, Guidance, Advising, Tutoring, and Engagement.
                     </p>
                     <div className='login-nsu-badge'>Nova Southeastern University</div>
                 </div>

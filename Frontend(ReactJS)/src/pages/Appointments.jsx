@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useData } from '../hooks/useData'
@@ -9,19 +9,20 @@ import AppointmentModal from '../components/AppointmentModal'
 import LoadingScreen from '../components/LoadingScreen'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarXmark, faPlus, faList, faCalendar } from '@fortawesome/free-solid-svg-icons'
+import nsuBackground from '../assets/nsuBackground.jpeg'
 import '../styles/Appointments.css'
 
 function AppointmentsPage() {
-    const { logout }                                    = useAuth()
+    const { logout }                                        = useAuth()
     const { student, appointments, loading, fetchAll,
-            refreshAppointments }                       = useData()
-    const navigate                                      = useNavigate()
+            refreshAppointments }                           = useData()
+    const navigate                                          = useNavigate()
 
-    const [ showForm, setShowForm ]                     = useState( false )
-    const [ selectedAppointment, setSelectedAppointment ] = useState( null )
-    const [ view, setView ]                             = useState( 'list' ) // 'list' | 'calendar'
+    const [ showForm, setShowForm ]                         = useState( false )
+    const [ selectedAppointment, setSelectedAppointment ]   = useState( null )
+    const [ view, setView ]                                 = useState( 'list' )
 
-    const handleLogout = async() => {
+    const handleLogout = async () => {
         await logout()
         navigate( '/login' )
     }
@@ -47,52 +48,60 @@ function AppointmentsPage() {
         <div className='appointments-wrapper'>
             <StudentNavbar student={student} onLogout={handleLogout} />
 
-            <div className='appointments-content'>
-
-                {/* Header */}
-                <div className='appointments-header'>
-                    <div className='appointments-header-left'>
-                        <h1 className='appointments-title'>Appointments</h1>
-                        <p className='appointments-subtitle'>
-                            { upcomingAppointments.length } upcoming · { pastAppointments.length } past
-                        </p>
-                    </div>
-                    <div className='appointments-header-right'>
-
-                        {/* View toggle */}
-                        <div className='appointments-view-toggle'>
-                            <button
-                                className={`toggle-btn ${ view === 'list' ? 'active' : '' }`}
-                                onClick={ () => setView( 'list' ) }
-                            >
-                                <FontAwesomeIcon icon={faList} />
-                                <span>List</span>
-                            </button>
-                            <button
-                                className={`toggle-btn ${ view === 'calendar' ? 'active' : '' }`}
-                                onClick={ () => setView( 'calendar' ) }
-                            >
-                                <FontAwesomeIcon icon={faCalendar} />
-                                <span>Calendar</span>
-                            </button>
-                        </div>
-
+            {/* Hero */}
+            <div
+                className='appointments-hero'
+                style={{ backgroundImage: `url(${ nsuBackground })` }}
+            >
+                <div className='appointments-hero-overlay' />
+                <div className='appointments-hero-content'>
+                    <h1 className='appointments-hero-title'>Appointments</h1>
+                    <p className='appointments-hero-sub'>
+                        { upcomingAppointments.length } upcoming · { pastAppointments.length } past
+                    </p>
+                </div>
+                <div className='appointments-hero-actions'>
+                    <div className='appointments-view-toggle'>
                         <button
-                            className='appointments-new-btn'
-                            onClick={ () => setShowForm( !showForm ) }
+                            className={`toggle-btn ${ view === 'list' ? 'active' : '' }`}
+                            onClick={ () => setView( 'list' ) }
                         >
-                            <FontAwesomeIcon icon={faPlus} />
-                            New Appointment
+                            <FontAwesomeIcon icon={faList} />
+                            <span>List</span>
+                        </button>
+                        <button
+                            className={`toggle-btn ${ view === 'calendar' ? 'active' : '' }`}
+                            onClick={ () => setView( 'calendar' ) }
+                        >
+                            <FontAwesomeIcon icon={faCalendar} />
+                            <span>Calendar</span>
                         </button>
                     </div>
+                    <button
+                        className='appointments-new-btn'
+                        onClick={ () => setShowForm( !showForm ) }
+                    >
+                        <FontAwesomeIcon icon={faPlus} />
+                        New Appointment
+                    </button>
                 </div>
+            </div>
+
+            <div className='appointments-content'>
 
                 {/* Create Appointment Form */}
                 { showForm && (
-                    <CreateAppointment onAppointmentCreated={ () => {
-                        refreshAppointments()
-                        setShowForm( false )
-                    }} />
+                    <div className='modal-overlay' onClick={ () => setShowForm( false ) }>
+                        <div className='modal-box' onClick={ e => e.stopPropagation() }>
+                            <CreateAppointment
+                                onAppointmentCreated={ () => {
+                                    refreshAppointments()
+                                    setShowForm( false )
+                                }}
+                                onClose={ () => setShowForm( false ) }
+                            />
+                        </div>
+                    </div>
                 )}
 
                 {/* Calendar View */}

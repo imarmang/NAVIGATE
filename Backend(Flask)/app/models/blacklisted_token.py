@@ -1,5 +1,9 @@
-from app import db
+import logging
 from datetime import datetime, timezone
+
+from app import db
+
+logger = logging.getLogger( __name__ )
 
 class BlackListedToken( db.Model ):
     __tablename__ = 'blacklisted_tokens'
@@ -18,8 +22,10 @@ class BlackListedToken( db.Model ):
     @staticmethod
     def purge_expired():
         """Delete tokens that have already expired - call periodically to keep the table clean."""
-        BlackListedToken.query.filter(
+        deleted_count = BlackListedToken.query.filter(
             BlackListedToken.expires_at < datetime.now( timezone.utc )
         ).delete()
 
         db.session.commit()
+        logger.info('Blacklisted token purge finished: removed %d expired row(s)',deleted_count )
+        return deleted_count

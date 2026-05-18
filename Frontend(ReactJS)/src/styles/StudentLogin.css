@@ -50,7 +50,7 @@
 .login-card {
     display: flex;
     width: 860px;
-    height: 560px;
+    min-height: 600px;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
@@ -215,4 +215,19 @@
     color: #2F4263;
     font-weight: 500;
     text-decoration: none;
+}
+
+.login-tagline {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.6;
+}
+
+.tagline-row {
+  display: block;
+}
+
+.navigate-letter {
+  font-weight: bold;
+  color: #your-accent-color; /* match your app's theme */
 }
