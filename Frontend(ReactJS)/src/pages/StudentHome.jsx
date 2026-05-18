@@ -1,21 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth.js'
-import { useData } from '../hooks/useData.js'
-import CreateAppointment from '../components/CreateAppointment'
+import { useAuth } from '../hooks/useAuth'
+import { useData } from '../hooks/useData'
 import StudentNavbar from '../components/navbar/StudentNavbar'
-import '../styles/StudentHome.css'
-import nsuBackground from '../assets/nsuBackground.jpeg'
+import LoadingScreen from '../components/LoadingScreen'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendarXmark, faBookOpen, faClockRotateLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
-import LoadingScreen from "../components/LoadingScreen.jsx";
+import { faCalendar, faBookOpen, faEnvelope, faIdCard } from '@fortawesome/free-solid-svg-icons'
+import nsuBackground from '../assets/nsuBackground.jpeg'
+import '../styles/StudentHome.css'
 
 function StudentHome() {
-    const { logout }                                                    = useAuth()
-    const { student, appointments, courses, loading, fetchAll,
-            refreshAppointments }                                       = useData()
-    const navigate                                                      = useNavigate()
-    const [ showForm, setShowForm ]                                     = useState( false )
+    const { logout }                            = useAuth()
+    const { student, appointments, courses,
+            loading, fetchAll }                 = useData()
+    const navigate                              = useNavigate()
 
     useEffect( () => {
         fetchAll().catch( () => {
@@ -24,173 +22,115 @@ function StudentHome() {
         } )
     }, [] )
 
-    const handleLogout = async() => {
+    const handleLogout = async () => {
         await logout()
         navigate( '/login' )
     }
 
-    const upcomingAppointments = appointments
-        .filter( a => new Date( a.appointment_date ) >= new Date() )
-        .sort( ( a, b ) => new Date( a.appointment_date ) - new Date( b.appointment_date ) )
-        .slice( 0, 3 )
+    const upcomingCount = appointments.filter(
+        a => new Date( a.appointment_date ) >= new Date()
+    ).length
 
-    const pastAppointments = appointments
-        .filter( a => new Date( a.appointment_date ) < new Date() )
-        .sort( ( a, b ) => new Date( b.appointment_date ) - new Date( a.appointment_date ) )
+    const today = new Date().toLocaleDateString( 'en-US', {
+        weekday: 'long',
+        year:    'numeric',
+        month:   'long',
+        day:     'numeric'
+    } )
 
-    if ( loading ) return <LoadingScreen message="Logging you in..." />
+    const initials = student
+        ? `${ student.first_name?.[0] }${ student.last_name?.[0] }`
+        : ''
+
+    if ( loading ) return <LoadingScreen message='Loading your dashboard...' />
 
     return (
         <div className='home-wrapper'>
-
             <StudentNavbar student={student} onLogout={handleLogout} />
 
-           {/* Hero */}
-            <div className='home-hero' style={{ backgroundImage: `url(${nsuBackground})` }}>
+            {/* Hero */}
+            <div
+                className='home-hero'
+                style={{ backgroundImage: `url(${ nsuBackground })` }}
+            >
                 <div className='home-hero-overlay' />
                 <div className='home-hero-content'>
+                    <p className='home-hero-date'>{ today }</p>
                     <h1 className='home-hero-title'>
-                        Welcome back, {student?.first_name}!
+                        Welcome back, { student?.first_name }!
                     </h1>
                     <p className='home-hero-sub'>
-                        Here is your academic dashboard for { new Date().toLocaleString('default', { month: 'long', year: 'numeric' } ) }.
+                        Network for Academic Visits, Instruction, Guidance, Advising, Tutoring, and Engagement.
                     </p>
-                </div>
-                <div className='home-hero-stats'>
-                    <div className='home-hero-stat'>
-                        <span className='home-hero-stat-number'>{upcomingAppointments.length}</span>
-                        <span className='home-hero-stat-label'>Upcoming</span>
-                    </div>
-                    <div className='home-hero-stat'>
-                        <span className='home-hero-stat-number'>{courses.length}</span>
-                        <span className='home-hero-stat-label'>Courses</span>
-                    </div>
-                    <div className='home-hero-stat'>
-                        <span className='home-hero-stat-number'>{pastAppointments.length}</span>
-                        <span className='home-hero-stat-label'>Completed</span>
-                    </div>
                 </div>
             </div>
 
-            {/* Main Content */}
             <div className='home-content'>
 
-                <div className='create-appointment-wrapper'>
-                    <button
-                        className='btn-make-appointment'
-                        onClick={() => setShowForm( !showForm )}
-                    >
-                        <FontAwesomeIcon icon={faPlus} style={{ marginRight: '8px' }} />
-                        Make an Appointment
-                    </button>
-                    {showForm && <CreateAppointment onAppointmentCreated={() => {
-                        refreshAppointments()
-                        setShowForm( false )
-                    }} />}
-                </div>
-
-                <div className='home-two-col'>
-
-                    {/* Upcoming Appointments */}
-                    <div className='home-card'>
-                        <div className='home-card-header'>
-                            <h2 className='home-card-title'>Upcoming Appointments</h2>
-                        </div>
-                        {upcomingAppointments.length === 0 ? (
-                           <div className='home-empty'>
-                               <FontAwesomeIcon icon={faCalendarXmark} className='home-empty-fa-icon' />
-                               <p className='home-empty-text'>No upcoming appointments.</p>
-                           </div>
-                        ) : (
-                            upcomingAppointments.map( appointment => (
-                                <div key={appointment.id} className='appointment-item'>
-                                    <div className='appointment-date-badge'>
-                                        <span className='appointment-month'>
-                                            {new Date(appointment.appointment_date).toLocaleString('default', { month: 'short' })}
-                                        </span>
-                                        <span className='appointment-day'>
-                                            {new Date(appointment.appointment_date).getDate()}
-                                        </span>
-                                    </div>
-                                    <div className='appointment-info'>
-                                        <p className='appointment-course'>
-                                            {appointment.subject} {appointment.course}
-                                        </p>
-                                        <p className='appointment-tutor'>
-                                            {appointment.tutor_name}
-                                        </p>
-                                    </div>
-                                    <span className='appointment-time-badge'>
-                                        {new Date(appointment.appointment_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
-                                </div>
-                            ))
-                        )}
-                    </div>
-
-                    {/* My Courses */}
-                    <div className='home-card'>
-                        <div className='home-card-header'>
-                            <h2 className='home-card-title'>My Courses</h2>
-                        </div>
-                        {courses.length === 0 ? (
-                            <div className='home-empty'>
-                                <FontAwesomeIcon icon={faBookOpen} className='home-empty-fa-icon' />
-                                <p className='home-empty-text'>No courses enrolled yet.</p>
-                            </div>
-                        ) : (
-                            courses.map( course => (
-                                <div key={course.id} className='course-item'>
-                                    <div className='course-icon'>
-                                        {course.subject.slice(0, 2)}
-                                    </div>
-                                    <p className='course-name'>
-                                        {course.subject} {course.course_id}
-                                    </p>
-                                </div>
-                            ))
-                        )}
-                    </div>
-
-                </div>
-
-                {/* Appointment History */}
+                {/* Profile card */}
                 <div className='home-card'>
-                    <div className='home-card-header'>
-                        <h2 className='home-card-title'>Appointment History</h2>
-                    </div>
-                    {pastAppointments.length === 0 ? (
-                        <div className='home-empty'>
-                            <FontAwesomeIcon icon={faClockRotateLeft} className='home-empty-fa-icon' />
-                            <p className='home-empty-text'>No past appointments yet.</p>
+
+                    {/* Avatar row */}
+                    <div className='home-profile-top'>
+                        <div className='home-avatar'>
+                            { initials }
                         </div>
-                    ) : (
-                        pastAppointments.map( appointment => (
-                            <div key={appointment.id} className='appointment-item'>
-                                <div className='appointment-date-badge'>
-                                    <span className='appointment-month'>
-                                        {new Date(appointment.appointment_date).toLocaleString('default', { month: 'short' })}
-                                    </span>
-                                    <span className='appointment-day'>
-                                        {new Date(appointment.appointment_date).getDate()}
-                                    </span>
-                                </div>
-                                <div className='appointment-info'>
-                                    <p className='appointment-course'>
-                                        {appointment.subject} {appointment.course}
-                                    </p>
-                                    <p className='appointment-tutor'>
-                                        {appointment.tutor_name}
-                                    </p>
-                                </div>
-                                {appointment.message && (
-                                    <span style={{ fontSize: '12px', color: '#506B90', fontStyle: 'italic' }}>
-                                        "{appointment.message}"
-                                    </span>
-                                )}
+                        <div className='home-avatar-info'>
+                            <p className='home-avatar-name'>{ student?.first_name } { student?.last_name }</p>
+                            <p className='home-avatar-sub'>NSU CCAC</p>
+                        </div>
+                    </div>
+
+                    <div className='home-profile-divider' />
+
+                    {/* Detail rows */}
+                    <div className='home-profile-grid'>
+                        <div className='home-profile-row'>
+                            <FontAwesomeIcon icon={faIdCard} className='home-profile-icon' />
+                            <div>
+                                <p className='home-profile-label'>N-Number</p>
+                                <p className='home-profile-value'>{ student?.n_number }</p>
                             </div>
-                        ))
-                    )}
+                        </div>
+                        <div className='home-profile-row'>
+                            <FontAwesomeIcon icon={faEnvelope} className='home-profile-icon' />
+                            <div>
+                                <p className='home-profile-label'>Email</p>
+                                <p className='home-profile-value'>{ student?.email }</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Stat cards */}
+                <div className='home-stats-grid'>
+                    <div
+                        className='home-stat-card'
+                        onClick={ () => navigate( '/appointments' ) }
+                    >
+                        <div className='home-stat-icon appointments'>
+                            <FontAwesomeIcon icon={faCalendar} />
+                        </div>
+                        <div className='home-stat-info'>
+                            <span className='home-stat-number'>{ upcomingCount }</span>
+                            <span className='home-stat-label'>Upcoming Appointments</span>
+                        </div>
+                        <span className='home-stat-link'>View all →</span>
+                    </div>
+
+                    <div
+                        className='home-stat-card'
+                        onClick={ () => navigate( '/courses' ) }
+                    >
+                        <div className='home-stat-icon courses'>
+                            <FontAwesomeIcon icon={faBookOpen} />
+                        </div>
+                        <div className='home-stat-info'>
+                            <span className='home-stat-number'>{ courses.length }</span>
+                            <span className='home-stat-label'>Enrolled Courses</span>
+                        </div>
+                        <span className='home-stat-link'>View all →</span>
+                    </div>
                 </div>
 
             </div>
