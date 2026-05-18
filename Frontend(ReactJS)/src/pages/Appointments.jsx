@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useData } from '../hooks/useData'
@@ -13,7 +13,7 @@ import '../styles/Appointments.css'
 
 function AppointmentsPage() {
     const { logout }                                    = useAuth()
-    const { appointments, loading, fetchAll,
+    const { student, appointments, loading, fetchAll,
             refreshAppointments }                       = useData()
     const navigate                                      = useNavigate()
 
@@ -21,8 +21,8 @@ function AppointmentsPage() {
     const [ selectedAppointment, setSelectedAppointment ] = useState( null )
     const [ view, setView ]                             = useState( 'list' ) // 'list' | 'calendar'
 
-    const handleLogout = () => {
-        logout()
+    const handleLogout = async() => {
+        await logout()
         navigate( '/login' )
     }
 
@@ -34,11 +34,18 @@ function AppointmentsPage() {
         .filter( a => new Date( a.appointment_date ) < new Date() )
         .sort( ( a, b ) => new Date( b.appointment_date ) - new Date( a.appointment_date ) )
 
+    useEffect( () => {
+        fetchAll().catch( () => {
+            logout()
+            navigate( '/login' )
+        } )
+    }, [] )
+
     if ( loading ) return <LoadingScreen message='Loading appointments...' />
 
     return (
         <div className='appointments-wrapper'>
-            <StudentNavbar onLogout={handleLogout} />
+            <StudentNavbar student={student} onLogout={handleLogout} />
 
             <div className='appointments-content'>
 
