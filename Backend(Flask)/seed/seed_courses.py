@@ -8,7 +8,7 @@ Covers all three undergraduate programs:
 Run from the backend root:
 
     flask shell
-    >>> from seed_courses import seed
+    >>> from seed.seed_courses import seed
     >>> seed()
 """
 
