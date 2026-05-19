@@ -1,44 +1,93 @@
-import { useState, useEffect } from 'react'
-import { updateMessage } from '../services/api'
+import { useState } from 'react'
+import { deleteAppointment } from '../services/api'
+import '../styles/AppointmentModal.css'
 
-function AppointmentModal({ appointment, onClose }) {
-    const [message, setMessage] = useState(appointment.message || '')
-    const [saving, setSaving] = useState(false)
+function AppointmentModal( { appointment, onClose, onDeleted, isPast } ) {
+    const [ confirmDelete, setConfirmDelete ] = useState( false )
+    const [ deleting, setDeleting ]           = useState( false )
+    const [ error, setError ]                 = useState( '' )
 
-    const appDate = new Date(appointment.appointment_date)
-    const date = appDate.toISOString().split('T')[0]
-    const time = appDate.toTimeString().slice(0, 5)
+    const [ date, time ] = appointment.appointment_date.split( 'T' )
+    const message                      = appointment.message
 
-    const handleSaveMessage = async () => {
-        setSaving(true)
+    const handleDelete = async () => {
+        if ( !confirmDelete ) {
+            setConfirmDelete( true )
+            return
+        }
+
+        setDeleting( true )
+
         try {
-            await updateMessage(appointment.id, { message })
-        } catch (err) {
-            console.error('Failed to save message')
-        } finally {
-            setSaving(false)
+            await deleteAppointment( appointment.id )
+            onDeleted()
+        } catch ( err ) {
+            setError( 'Failed to cancel appointment. Please try again.' )
+            setDeleting( false )
+            setConfirmDelete( false )
         }
     }
 
     return (
-        <div className='modal-overlay'>
-            <div className='modal-box'>
-                <p>Appointment Details</p>
-                <p>{appointment.subject} - {appointment.course}</p>
-                <p>Date: {date}</p>
-                <p>Time: {time}</p>
-                <p>Tutor: {appointment.tutor_name}</p>
-                <textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder='Add a message...'
-                />
-                <div>
-                    <button onClick={handleSaveMessage} disabled={saving}>
-                        {saving ? 'Saving...' : 'Save Message'}
-                    </button>
-                    <button onClick={onClose}>Close</button>
+        <div className='modal-overlay' onClick={onClose}>
+            <div className='modal-box' onClick={ e => e.stopPropagation() }>
+
+                <div className='modal-header'>
+                    <h3 className='modal-title'>{ appointment.subject } { appointment.course }</h3>
+                    <button className='modal-close-btn' onClick={onClose}>✕</button>
                 </div>
+
+                <div className='modal-details'>
+                    <div className='modal-detail-row'>
+                        <span className='modal-detail-label'>Instructor</span>
+                        <span className='modal-detail-value'>{ appointment.tutor_name }</span>
+                    </div>
+                    <div className='modal-detail-row'>
+                        <span className='modal-detail-label'>Date</span>
+                        <span className='modal-detail-value'>{ date }</span>
+                    </div>
+                    <div className='modal-detail-row'>
+                        <span className='modal-detail-label'>Time</span>
+                        <span className='modal-detail-value'>{ time }</span>
+                    </div>
+                    { message && (
+                    <div className='modal-detail-row'>
+                        <span className='modal-detail-label'>Message</span>
+                        <span className='modal-detail-value modal-detail-message'>{ message }</span>
+                    </div>
+                    ) }
+                </div>
+
+                { error && <p className='modal-error'>{ error }</p> }
+                { !isPast && (
+                    <div className='modal-actions'>
+                        { confirmDelete ? (
+                            <div className='modal-confirm-delete'>
+                                <span className='modal-confirm-text'>Cancel this appointment?</span>
+                                <button
+                                    className='modal-btn-confirm-yes'
+                                    onClick={handleDelete}
+                                    disabled={deleting}
+                                >
+                                    { deleting ? 'Cancelling...' : 'Yes, cancel it' }
+                                </button>
+                                <button
+                                    className='modal-btn-confirm-no'
+                                    onClick={ () => setConfirmDelete( false ) }
+                                >
+                                    No
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                className='modal-btn-delete'
+                                onClick={handleDelete}
+                            >
+                                Cancel Appointment
+                            </button>
+                        ) }
+                    </div>
+                )}
             </div>
         </div>
     )

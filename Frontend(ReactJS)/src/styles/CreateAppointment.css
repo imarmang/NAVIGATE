@@ -187,7 +187,7 @@
 
 /* ── Date input ── */
 .ca-date-input {
-    padding: 10px 14px;
+       padding: 10px 14px;
     border: 1px solid #dde3ef;
     border-radius: 8px;
     font-size: 13px;
@@ -195,8 +195,11 @@
     color: #2F4263;
     background: #f8f9fc;
     outline: none;
-    max-width: 200px;
-    transition: border-color 0.2s;
+    width: 200px;
+    transition: border-color 0.2s, background 0.2s;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
 }
 
 .ca-date-input:focus {
@@ -362,6 +365,16 @@
 .ca-btn-confirm:hover { background: #3a5278; }
 .ca-btn-confirm:disabled { background: #9ba8bb; cursor: not-allowed; }
 
+.ca-option-btn.instructor.active.si-selected {
+    border-color: #3B6D11;
+    background: #3B6D11;
+    color: #ffffff;
+}
+
+.ca-option-btn.instructor.active.si-selected .ca-instructor-role {
+    background: rgba( 255, 255, 255, 0.2 );
+    color: #ffffff;
+}
 /* ── Responsive ── */
 @media ( max-width: 768px ) {
     .ca-time-grid {

@@ -220,6 +220,7 @@ function AppointmentsPage() {
                         refreshAppointments()
                         setSelectedAppointment( null )
                     }}
+                    isPast={ new Date( selectedAppointment.appointment_date ) < new Date() }
                 />
             )}
         </div>

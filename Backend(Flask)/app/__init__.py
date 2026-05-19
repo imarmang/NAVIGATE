@@ -63,10 +63,12 @@ def create_app():
     from app.routes.auth import auth_bp
     from app.routes.appointments import appointments_bp
     from app.routes.courses import courses_bp
+    from app.routes.staff import staff_bp
 
     app.register_blueprint( auth_bp, url_prefix='/auth' )
     app.register_blueprint( appointments_bp, url_prefix='/appointments' )
     app.register_blueprint( courses_bp, url_prefix='/courses' )
+    app.register_blueprint(staff_bp, url_prefix='/staff')
 
     # Start periodic cleanup of expired logout tokens (see _init_blacklist_purge_scheduler).
     _init_blacklist_purge_scheduler( app )
