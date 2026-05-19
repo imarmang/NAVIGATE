@@ -119,6 +119,10 @@ def me():
 
     return jsonify( student.to_dict() ), 200
 
+@auth_bp.route( '/health', methods=[ 'GET' ] )
+def health():
+    return jsonify( { 'status': 'ok' } ), 200
+
 # 200 - OK Status Code
 # 201 - Created Status Code
 # 400 - Bad Request, syntax error, invalid framing
