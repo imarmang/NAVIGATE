@@ -1,234 +1,17 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useData } from '../hooks/useData'
 import StudentNavbar from '../components/navbar/StudentNavbar'
+import { useEffect, useState } from 'react'
+import { getCourses } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faCheck } from '@fortawesome/free-solid-svg-icons'
 import nsuBackground from '../assets/nsuBackground.jpeg'
 import '../styles/Courses.css'
+import LoadingScreen from "../components/LoadingScreen.jsx";
 
 const MAX_COURSES = 6
 
-// All available courses with hardcoded staff
-const ALL_COURSES = [
-    {
-        id: 1, subject: 'MATH', course_id: '1200', name: 'Precalculus Algebra',
-        staff: [ { name: 'Dr. James Hartwell', role: 'Professor' } ]
-    },
-    {
-        id: 2, subject: 'MATH', course_id: '2020', name: 'Applied Statistics',
-        staff: [ { name: 'Dr. James Hartwell', role: 'Professor' } ]
-    },
-    {
-        id: 3, subject: 'MATH', course_id: '2100', name: 'Calculus I',
-        staff: [
-            { name: 'Dr. James Hartwell', role: 'Professor' },
-            { name: 'Riley Santos',        role: 'SI'        }
-        ]
-    },
-    {
-        id: 4, subject: 'MATH', course_id: '2200', name: 'Calculus II',
-        staff: [
-            { name: 'Dr. James Hartwell', role: 'Professor' },
-            { name: 'Riley Santos',        role: 'SI'        }
-        ]
-    },
-    {
-        id: 5, subject: 'MATH', course_id: '3300', name: 'Introductory Linear Algebra',
-        staff: [ { name: 'Dr. Sarah Mitchell', role: 'Professor' } ]
-    },
-    {
-        id: 6, subject: 'MATH', course_id: '4500', name: 'Probability and Statistics',
-        staff: [ { name: 'Dr. Sarah Mitchell', role: 'Professor' } ]
-    },
-    {
-        id: 7, subject: 'PHYS', course_id: '2400', name: 'Physics I / Lab',
-        staff: [ { name: 'Dr. Sarah Mitchell', role: 'Professor' } ]
-    },
-    {
-        id: 8, subject: 'CSIS', course_id: '1800', name: 'Introduction to Computer and Information Sciences',
-        staff: [
-            { name: 'Dr. Michael Torres', role: 'Professor' },
-            { name: 'Casey Morgan',       role: 'SI'        }
-        ]
-    },
-    {
-        id: 9, subject: 'CSIS', course_id: '2000', name: 'Introduction to Database Systems',
-        staff: [
-            { name: 'Dr. Michael Torres', role: 'Professor' },
-            { name: 'Quinn Martinez',     role: 'SI'        }
-        ]
-    },
-    {
-        id: 10, subject: 'CSIS', course_id: '2050', name: 'Discrete Mathematics',
-        staff: [ { name: 'Dr. Michael Torres', role: 'Professor' } ]
-    },
-    {
-        id: 11, subject: 'CSIS', course_id: '2101', name: 'Fundamentals of Computer Programming',
-        staff: [
-            { name: 'Dr. Michael Torres', role: 'Professor' },
-            { name: 'Casey Morgan',       role: 'SI'        }
-        ]
-    },
-    {
-        id: 12, subject: 'CSIS', course_id: '3001', name: 'Introduction to Cybersecurity',
-        staff: [ { name: 'Dr. Elena Vasquez', role: 'Professor' } ]
-    },
-    {
-        id: 13, subject: 'CSIS', course_id: '3020', name: 'Web Programming and Design',
-        staff: [
-            { name: 'Dr. Priya Sharma',   role: 'Professor' },
-            { name: 'Dakota Williams',    role: 'SI'        }
-        ]
-    },
-    {
-        id: 14, subject: 'CSIS', course_id: '3023', name: 'Legal and Ethical Aspects of Computers',
-        staff: [ { name: 'Dr. Thomas Wright', role: 'Professor' } ]
-    },
-    {
-        id: 15, subject: 'CSIS', course_id: '3051', name: 'Computer Organization and Architecture',
-        staff: [
-            { name: 'Dr. David Okonkwo', role: 'Professor' },
-            { name: 'Jamie Rivera',      role: 'SI'        }
-        ]
-    },
-    {
-        id: 16, subject: 'CSIS', course_id: '3101', name: 'Advanced Computer Programming',
-        staff: [
-            { name: 'Dr. Robert Leinecker', role: 'Professor' },
-            { name: 'Cameron Foster',       role: 'SI'        }
-        ]
-    },
-    {
-        id: 17, subject: 'CSIS', course_id: '3200', name: 'Organization of Programming Languages',
-        staff: [
-            { name: 'Dr. Robert Leinecker', role: 'Professor' },
-            { name: 'Cameron Foster',       role: 'SI'        }
-        ]
-    },
-    {
-        id: 18, subject: 'CSIS', course_id: '3400', name: 'Data Structures',
-        staff: [
-            { name: 'Dr. Robert Leinecker', role: 'Professor' },
-            { name: 'Taylor Brooks',        role: 'SI'        }
-        ]
-    },
-    {
-        id: 19, subject: 'CSIS', course_id: '3460', name: 'Object-Oriented Design',
-        staff: [
-            { name: 'Dr. Robert Leinecker', role: 'Professor' },
-            { name: 'Taylor Brooks',        role: 'SI'        }
-        ]
-    },
-    {
-        id: 20, subject: 'CSIS', course_id: '3500', name: 'Networks and Data Communication',
-        staff: [
-            { name: 'Dr. Elena Vasquez', role: 'Professor' },
-            { name: 'Jordan Kim',        role: 'SI'        }
-        ]
-    },
-    {
-        id: 21, subject: 'CSIS', course_id: '3530', name: 'Artificial Intelligence',
-        staff: [
-            { name: 'Dr. Linda Chen',  role: 'Professor' },
-            { name: 'Avery Johnson',   role: 'SI'        }
-        ]
-    },
-    {
-        id: 22, subject: 'CSIS', course_id: '3610', name: 'Numerical Analysis',
-        staff: [ { name: 'Dr. Linda Chen', role: 'Professor' } ]
-    },
-    {
-        id: 23, subject: 'CSIS', course_id: '3750', name: 'Software Engineering',
-        staff: [ { name: 'Dr. David Okonkwo', role: 'Professor' } ]
-    },
-    {
-        id: 24, subject: 'CSIS', course_id: '3810', name: 'Operating Systems Concepts',
-        staff: [
-            { name: 'Dr. David Okonkwo', role: 'Professor' },
-            { name: 'Jamie Rivera',      role: 'SI'        }
-        ]
-    },
-    {
-        id: 25, subject: 'CSIS', course_id: '4010', name: 'Computer Security',
-        staff: [
-            { name: 'Dr. Elena Vasquez', role: 'Professor' },
-            { name: 'Jordan Kim',        role: 'SI'        }
-        ]
-    },
-    {
-        id: 26, subject: 'CSIS', course_id: '4311', name: 'Web Services and Systems',
-        staff: [
-            { name: 'Dr. Priya Sharma',  role: 'Professor' },
-            { name: 'Dakota Williams',   role: 'SI'        }
-        ]
-    },
-    {
-        id: 27, subject: 'CSIS', course_id: '4351', name: 'Human-Computer Interaction',
-        staff: [ { name: 'Dr. Priya Sharma', role: 'Professor' } ]
-    },
-    {
-        id: 28, subject: 'CSIS', course_id: '4501', name: 'Wireless Network Infrastructures',
-        staff: [ { name: 'Dr. Elena Vasquez', role: 'Professor' } ]
-    },
-    {
-        id: 29, subject: 'CSIS', course_id: '4530', name: 'Database Management',
-        staff: [
-            { name: 'Dr. Priya Sharma',  role: 'Professor' },
-            { name: 'Quinn Martinez',    role: 'SI'        }
-        ]
-    },
-    {
-        id: 30, subject: 'CSIS', course_id: '4610', name: 'Design and Analysis of Algorithms',
-        staff: [
-            { name: 'Dr. Linda Chen',  role: 'Professor' },
-            { name: 'Avery Johnson',   role: 'SI'        }
-        ]
-    },
-    {
-        id: 31, subject: 'CSIS', course_id: '4903', name: 'Capstone Project for Computer Science',
-        staff: [ { name: 'Dr. Thomas Wright', role: 'Professor' } ]
-    },
-    {
-        id: 32, subject: 'CSIS', course_id: '4953', name: 'Capstone Internship in Computer Science',
-        staff: [ { name: 'Dr. Thomas Wright', role: 'Professor' } ]
-    },
-    {
-        id: 33, subject: 'TECH', course_id: '3300', name: 'System Analysis and Design',
-        staff: [
-            { name: 'Dr. Maria Castillo', role: 'Professor' },
-            { name: 'Blake Anderson',     role: 'SI'        }
-        ]
-    },
-    {
-        id: 34, subject: 'TECH', course_id: '3320', name: 'Technology Project Management',
-        staff: [
-            { name: 'Dr. Maria Castillo', role: 'Professor' },
-            { name: 'Blake Anderson',     role: 'SI'        }
-        ]
-    },
-    {
-        id: 35, subject: 'TECH', course_id: '4200', name: 'Cybersecurity Operation Management',
-        staff: [ { name: 'Dr. Maria Castillo', role: 'Professor' } ]
-    },
-    {
-        id: 36, subject: 'TECH', course_id: '4220', name: 'Cybersecurity Governance',
-        staff: [ { name: 'Dr. Maria Castillo', role: 'Professor' } ]
-    },
-    {
-        id: 37, subject: 'TECH', course_id: '4240', name: 'Cybersecurity Auditing',
-        staff: [ { name: 'Dr. Maria Castillo', role: 'Professor' } ]
-    },
-    {
-        id: 38, subject: 'TECH', course_id: '4900', name: 'Directed Project in Information Technology',
-        staff: [ { name: 'Dr. Thomas Wright', role: 'Professor' } ]
-    },
-    {
-        id: 39, subject: 'TECH', course_id: '4950', name: 'Internship in Information Technology',
-        staff: [ { name: 'Dr. Thomas Wright', role: 'Professor' } ]
-    },
-]
 
 function CoursesPage() {
     const { logout }                                = useAuth()
@@ -243,6 +26,18 @@ function CoursesPage() {
     const [ expandedId, setExpandedId ]             = useState( null ) // right col expanded
     const [ hasChanges, setHasChanges ]             = useState( false )
     const [ saved, setSaved ]                       = useState( false )
+    const [ allCourses, setAllCourses ] = useState( [] )
+    const [ loadingCourses, setLoadingCourses ] = useState( true )
+
+    useEffect( () => {
+        getCourses()
+            .then( res => {
+                console.log( 'Courses from API:', res.data )
+                setAllCourses( res.data )
+            } )
+            .catch( err => console.error( 'Failed to load courses:', err ) )
+            .finally( () => setLoadingCourses( false ) )
+    }, [] )
 
     const handleLogout = async () => {
         await logout()
@@ -286,10 +81,12 @@ function CoursesPage() {
         setSaved( true )
     }
 
-    const enrolledCourses  = ALL_COURSES.filter( c => enrolled.includes( c.id ) )
-    const availableCourses = ALL_COURSES.filter( c => !enrolled.includes( c.id ) )
+    const enrolledCourses  = allCourses.filter( c => enrolled.includes( c.id ) )
+    const availableCourses = allCourses.filter( c => !enrolled.includes( c.id ) )
     const activeEnrolled   = enrolledCourses.filter( c => !pendingRemove.includes( c.id ) )
     const atMax            = activeEnrolled.length >= MAX_COURSES
+
+    if ( loadingCourses ) return <LoadingScreen message='Loading courses...' />
 
     return (
         <div className='courses-wrapper'>
@@ -402,15 +199,15 @@ function CoursesPage() {
                                                 { isExpanded && (
                                                     <div className='course-card-expanded'>
                                                         <div className='course-staff-list'>
-                                                            { course.staff.map( ( s, i ) => (
+                                                            { ( course.staff ?? [] ).map( ( s, i ) => (
                                                                 <span
                                                                     key={i}
                                                                     className={`course-staff-badge ${ s.role === 'SI' ? 'si' : 'prof' }`}
                                                                 >
-                                                                    { s.name } · { s.role }
+                                                                    { s.first_name } { s.last_name } · { s.role }
                                                                 </span>
                                                             ) ) }
-                                                        </div>
+                                                                                                                    </div>
                                                     </div>
                                                 ) }
                                             </div>
