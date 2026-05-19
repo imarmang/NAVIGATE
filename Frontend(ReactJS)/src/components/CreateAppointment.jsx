@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getBookedSlots, createAppointment } from '../services/api'
-import { useData } from '../hooks/useData'
 import '../styles/CreateAppointment.css'
+import { useQuery } from '@tanstack/react-query'
+import { getStudentCourses } from '../services/api'
+
 
 // Hardcoded instructors per course — replace with API call once Staff model is built
 const INSTRUCTORS = {
@@ -54,9 +56,12 @@ const getMinDate = () => {
 }
 
 function CreateAppointment( { onAppointmentCreated, onClose } ) {
-    const { courses }                                           = useData()
-    const navigate                                              = useNavigate()
-
+    const navigate = useNavigate()
+    const { data: courses = [] } = useQuery( {
+        queryKey:  [ 'my-courses' ],
+        queryFn:   () => getStudentCourses().then( res => res.data ),
+        staleTime: Infinity,
+    } )
     const [ selectedCourse, setSelectedCourse ]                 = useState( null )
     const [ selectedInstructor, setSelectedInstructor ]         = useState( null )
     const [ selectedDate, setSelectedDate ]                     = useState( '' )

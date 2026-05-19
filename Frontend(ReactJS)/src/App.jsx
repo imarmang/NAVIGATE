@@ -1,18 +1,27 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from './context/AuthContext'
-import { DataProvider } from './context/DataContext'
-import ProtectedRoute from './routes/ProtectedRoute.jsx'
+import ProtectedRoute from './routes/ProtectedRoute'
 import StudentLogin from './pages/StudentLogin'
 import Register from './pages/Register'
 import StudentHome from './pages/StudentHome'
+import AppointmentsPage from './pages/Appointments'
+import CoursesPage from './pages/Courses'
 import Landing from './pages/Landing'
-import AppointmentsPage from "./pages/Appointments.jsx";
-import CoursesPage from "./pages/Courses.jsx";
+
+const queryClient = new QueryClient( {
+    defaultOptions: {
+        queries: {
+            retry:              1,
+            refetchOnWindowFocus: false,
+        }
+    }
+} )
 
 function App() {
     return (
-        <AuthProvider>
-            <DataProvider>
+        <QueryClientProvider client={queryClient}>
+            <AuthProvider queryClient={queryClient}>
                 <BrowserRouter>
                     <Routes>
                         {/* Public routes */}
@@ -42,12 +51,12 @@ function App() {
                             </ProtectedRoute>
                         } />
 
-                        {/* Default redirect */}
+                        {/* Fallback */}
                         <Route path='*' element={<Landing />} />
                     </Routes>
                 </BrowserRouter>
-            </DataProvider>
-        </AuthProvider>
+            </AuthProvider>
+        </QueryClientProvider>
     )
 }
 
