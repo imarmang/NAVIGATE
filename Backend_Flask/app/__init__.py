@@ -44,8 +44,12 @@ def create_app():
     db.init_app( app )
     bcrypt.init_app( app )
     jwt.init_app( app )
-    CORS( app )
-
+    CORS(app,
+         origins=os.getenv('ALLOWED_ORIGINS', 'http://localhost:5173').split(','),
+         supports_credentials=True,
+         allow_headers=['Content-Type', 'Authorization'],
+         methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+         )
     from app.models.blacklisted_token import BlackListedToken
     from app.models.staff import Staff
 
