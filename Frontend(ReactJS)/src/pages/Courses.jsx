@@ -3,12 +3,13 @@ import { useAuth } from '../hooks/useAuth'
 import { useData } from '../hooks/useData'
 import StudentNavbar from '../components/navbar/StudentNavbar'
 import { useEffect, useState } from 'react'
-import { getCourses } from '../services/api'
+import { getCourses, updateStudentCourses } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faCheck } from '@fortawesome/free-solid-svg-icons'
 import nsuBackground from '../assets/nsuBackground.jpeg'
 import '../styles/Courses.css'
 import LoadingScreen from "../components/LoadingScreen.jsx";
+
 
 const MAX_COURSES = 6
 
@@ -28,6 +29,9 @@ function CoursesPage() {
     const [ saved, setSaved ]                       = useState( false )
     const [ allCourses, setAllCourses ] = useState( [] )
     const [ loadingCourses, setLoadingCourses ] = useState( true )
+    // Add state for applying
+    const [ applying, setApplying ] = useState( false )
+    const [ applyError, setApplyError ] = useState( '' )
 
     useEffect( () => {
         getCourses()
@@ -74,14 +78,27 @@ function CoursesPage() {
         setSaved( false )
     }
 
-    // Apply all changes
-    const handleApply = () => {
+    // Updated handleApply
+    const handleApply = async () => {
+        setApplying( true )
+        setApplyError( '' )
+        setSaved( false )
+
         const updated = enrolled.filter( id => !pendingRemove.includes( id ) )
-        setEnrolled( updated )
-        setPendingRemove( [] )
-        setHasChanges( false )
-        setSaved( true )
+
+        try {
+            await updateStudentCourses( { course_ids: updated } )
+            setEnrolled( updated )
+            setPendingRemove( [] )
+            setHasChanges( false )
+            setSaved( true )
+        } catch ( err ) {
+            setApplyError( 'Failed to save changes. Please try again.' )
+        } finally {
+            setApplying( false )
+        }
     }
+
 
     const enrolledCourses  = allCourses.filter( c => enrolled.includes( c.id ) )
     const availableCourses = allCourses.filter( c => !enrolled.includes( c.id ) )
@@ -107,16 +124,17 @@ function CoursesPage() {
                         { atMax && <span className='courses-hero-max'> · Maximum reached</span> }
                     </p>
                 </div>
-                <div className='courses-hero-actions'>
-                    { saved && <span className='courses-hero-saved'>✓ Changes applied</span> }
-                    <button
-                        className='courses-apply-btn'
-                        onClick={handleApply}
-                        disabled={ !hasChanges }
-                    >
-                        Apply Changes
-                    </button>
-                </div>
+               <div className='courses-hero-actions'>
+                   { applyError && <span className='courses-hero-error'>{ applyError }</span> }
+                   { saved && <span className='courses-hero-saved'>✓ Changes applied</span> }
+                   <button
+                       className='courses-apply-btn'
+                       onClick={handleApply}
+                       disabled={ !hasChanges || applying }
+                   >
+                       { applying ? 'Saving...' : 'Apply Changes' }
+                   </button>
+               </div>
             </div>
 
             <div className='courses-content'>
