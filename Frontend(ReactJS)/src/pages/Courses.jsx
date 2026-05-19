@@ -1,75 +1,78 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '../hooks/useAuth'
-import { useData } from '../hooks/useData'
+import { getMe, getCourses, getStudentCourses, updateStudentCourses } from '../services/api'
 import StudentNavbar from '../components/navbar/StudentNavbar'
-import { useEffect, useState } from 'react'
-import { getCourses, updateStudentCourses } from '../services/api'
+import LoadingScreen from '../components/LoadingScreen'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faCheck } from '@fortawesome/free-solid-svg-icons'
 import nsuBackground from '../assets/nsuBackground.jpeg'
 import '../styles/Courses.css'
-import LoadingScreen from "../components/LoadingScreen.jsx";
-
 
 const MAX_COURSES = 6
 
-
 function CoursesPage() {
-    const { logout }                                = useAuth()
-    const { student, courses: contextCourses }      = useData()
-    const navigate                                  = useNavigate()
+    const { logout }        = useAuth()
+    const navigate          = useNavigate()
+    const queryClient       = useQueryClient()
 
-    // Seed initial enrolled from DataContext course ids
-    const initialEnrolled = contextCourses.map( c => c.id )
+    const [ enrolled, setEnrolled ]             = useState( [] )
+    const [ pendingRemove, setPendingRemove ]    = useState( [] )
+    const [ expandedId, setExpandedId ]         = useState( null )
+    const [ hasChanges, setHasChanges ]         = useState( false )
+    const [ applying, setApplying ]             = useState( false )
+    const [ saved, setSaved ]                   = useState( false )
+    const [ applyError, setApplyError ]         = useState( '' )
 
-    const [ enrolled, setEnrolled ]                 = useState( initialEnrolled )
-    const [ pendingRemove, setPendingRemove ]        = useState( [] ) // staged for removal
-    const [ expandedId, setExpandedId ]             = useState( null ) // right col expanded
-    const [ hasChanges, setHasChanges ]             = useState( false )
-    const [ saved, setSaved ]                       = useState( false )
-    const [ allCourses, setAllCourses ] = useState( [] )
-    const [ loadingCourses, setLoadingCourses ] = useState( true )
-    // Add state for applying
-    const [ applying, setApplying ] = useState( false )
-    const [ applyError, setApplyError ] = useState( '' )
+    const { data: student } = useQuery( {
+        queryKey:  [ 'me' ],
+        queryFn:   () => getMe().then( res => res.data ),
+        staleTime: Infinity,
+    } )
 
+    const { data: allCourses = [], isLoading: loadingAll } = useQuery( {
+        queryKey:  [ 'courses' ],
+        queryFn:   () => getCourses().then( res => res.data ),
+        staleTime: Infinity,
+    } )
+
+    const { data: myCourses = [], isLoading: loadingMine } = useQuery( {
+        queryKey:  [ 'my-courses' ],
+        queryFn:   () => getStudentCourses().then( res => res.data ),
+        staleTime: Infinity,
+    } )
+
+    // Initialise enrolled from fetched my-courses
     useEffect( () => {
-        getCourses()
-            .then( res => {
-                console.log( 'Courses from API:', res.data )
-                setAllCourses( res.data )
-            } )
-            .catch( err => console.error( 'Failed to load courses:', err ) )
-            .finally( () => setLoadingCourses( false ) )
-    }, [] )
+        if ( myCourses.length > 0 ) {
+            setEnrolled( myCourses.map( c => c.id ) )
+        }
+    }, [ myCourses ] )
 
     const handleLogout = async () => {
         await logout()
         navigate( '/login' )
     }
 
-    // Stage a removal — grey it out until Apply
     const handleStageRemove = ( id ) => {
         setPendingRemove( prev => [ ...prev, id ] )
         setHasChanges( true )
         setSaved( false )
     }
 
-    // Undo a staged removal
     const handleUndoRemove = ( id ) => {
         const activeCount = enrolled.filter( e => !pendingRemove.includes( e ) ).length
         if ( activeCount >= MAX_COURSES ) return
         const next = pendingRemove.filter( x => x !== id )
         setPendingRemove( next )
-        if ( next.length === 0 && !hasChanges ) setHasChanges( false )
+        if ( next.length === 0 ) setHasChanges( false )
     }
 
-    // Expand a course on the right to show staff + confirm button
     const handleExpandCourse = ( id ) => {
         setExpandedId( prev => prev === id ? null : id )
     }
 
-    // Add a course from the right column
     const handleAddCourse = ( id ) => {
         if ( enrolled.filter( e => !pendingRemove.includes( e ) ).length >= MAX_COURSES ) return
         setEnrolled( prev => [ ...prev, id ] )
@@ -78,7 +81,6 @@ function CoursesPage() {
         setSaved( false )
     }
 
-    // Updated handleApply
     const handleApply = async () => {
         setApplying( true )
         setApplyError( '' )
@@ -88,6 +90,7 @@ function CoursesPage() {
 
         try {
             await updateStudentCourses( { course_ids: updated } )
+            await queryClient.invalidateQueries( { queryKey: [ 'my-courses' ] } )
             setEnrolled( updated )
             setPendingRemove( [] )
             setHasChanges( false )
@@ -99,13 +102,12 @@ function CoursesPage() {
         }
     }
 
-
     const enrolledCourses  = allCourses.filter( c => enrolled.includes( c.id ) )
     const availableCourses = allCourses.filter( c => !enrolled.includes( c.id ) )
     const activeEnrolled   = enrolledCourses.filter( c => !pendingRemove.includes( c.id ) )
     const atMax            = activeEnrolled.length >= MAX_COURSES
 
-    if ( loadingCourses ) return <LoadingScreen message='Loading courses...' />
+    if ( loadingAll || loadingMine ) return <LoadingScreen message='Loading courses...' />
 
     return (
         <div className='courses-wrapper'>
@@ -124,17 +126,17 @@ function CoursesPage() {
                         { atMax && <span className='courses-hero-max'> · Maximum reached</span> }
                     </p>
                 </div>
-               <div className='courses-hero-actions'>
-                   { applyError && <span className='courses-hero-error'>{ applyError }</span> }
-                   { saved && <span className='courses-hero-saved'>✓ Changes applied</span> }
-                   <button
-                       className='courses-apply-btn'
-                       onClick={handleApply}
-                       disabled={ !hasChanges || applying }
-                   >
-                       { applying ? 'Saving...' : 'Apply Changes' }
-                   </button>
-               </div>
+                <div className='courses-hero-actions'>
+                    { applyError && <span className='courses-hero-error'>{ applyError }</span> }
+                    { saved && <span className='courses-hero-saved'>✓ Changes applied</span> }
+                    <button
+                        className='courses-apply-btn'
+                        onClick={handleApply}
+                        disabled={ !hasChanges || applying }
+                    >
+                        { applying ? 'Saving...' : 'Apply Changes' }
+                    </button>
+                </div>
             </div>
 
             <div className='courses-content'>
@@ -215,8 +217,6 @@ function CoursesPage() {
                                             <div className='course-card-info'>
                                                 <p className='course-card-code'>{ course.subject } { course.course_id }</p>
                                                 <p className='course-card-name'>{ course.name }</p>
-
-                                                {/* Expanded staff */}
                                                 { isExpanded && (
                                                     <div className='course-card-expanded'>
                                                         <div className='course-staff-list'>
@@ -228,7 +228,7 @@ function CoursesPage() {
                                                                     { s.first_name } { s.last_name } · { s.role }
                                                                 </span>
                                                             ) ) }
-                                                                                                                    </div>
+                                                        </div>
                                                     </div>
                                                 ) }
                                             </div>

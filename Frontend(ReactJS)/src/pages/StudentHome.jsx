@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '../hooks/useAuth'
-import { useData } from '../hooks/useData'
+import { getMe, getAppointments, getStudentCourses } from '../services/api'
 import StudentNavbar from '../components/navbar/StudentNavbar'
 import LoadingScreen from '../components/LoadingScreen'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,16 +10,26 @@ import nsuBackground from '../assets/nsuBackground.jpeg'
 import '../styles/StudentHome.css'
 
 function StudentHome() {
-    const { logout }                                             = useAuth()
-    const { student, appointments, courses, loading, fetchAll }  = useData()
-    const navigate                               = useNavigate()
+    const { logout }    = useAuth()
+    const navigate      = useNavigate()
 
-    useEffect( () => {
-        fetchAll().catch( () => {
-            logout()
-            navigate( '/login' )
-        } )
-    }, [] )
+    const { data: student, isLoading: loadingMe } = useQuery( {
+        queryKey:  [ 'me' ],
+        queryFn:   () => getMe().then( res => res.data ),
+        staleTime: Infinity,
+    } )
+
+    const { data: appointments = [], isLoading: loadingAppts } = useQuery( {
+        queryKey:  [ 'appointments' ],
+        queryFn:   () => getAppointments().then( res => res.data ),
+        staleTime: 5 * 60 * 1000,
+    } )
+
+    const { data: courses = [], isLoading: loadingCourses } = useQuery( {
+        queryKey:  [ 'my-courses' ],
+        queryFn:   () => getStudentCourses().then( res => res.data ),
+        staleTime: Infinity,
+    } )
 
     const handleLogout = async () => {
         await logout()
@@ -41,7 +51,7 @@ function StudentHome() {
         ? `${ student.first_name?.[0] }${ student.last_name?.[0] }`
         : ''
 
-    if ( loading ) return <LoadingScreen message='Loading your dashboard...' />
+    if ( loadingMe || loadingAppts || loadingCourses ) return <LoadingScreen message='Loading your dashboard...' />
 
     return (
         <div className='home-wrapper'>
@@ -59,7 +69,7 @@ function StudentHome() {
                         Welcome back, { student?.first_name }!
                     </h1>
                     <p className='home-hero-sub'>
-                        Network for Academic Visits, Instruction, Guidance, Advising, Tutoring, and Engagement.
+                        Nova Southeastern University · College of Computing, AI, and Cybersecurity
                     </p>
                 </div>
             </div>
@@ -68,21 +78,16 @@ function StudentHome() {
 
                 {/* Profile card */}
                 <div className='home-card'>
-
-                    {/* Avatar row */}
                     <div className='home-profile-top'>
-                        <div className='home-avatar'>
-                            { initials }
-                        </div>
+                        <div className='home-avatar'>{ initials }</div>
                         <div className='home-avatar-info'>
                             <p className='home-avatar-name'>{ student?.first_name } { student?.last_name }</p>
-                            <p className='home-avatar-sub'>NSU CCAC</p>
+                            <p className='home-avatar-sub'>Computer Science · NSU CCAC</p>
                         </div>
                     </div>
 
                     <div className='home-profile-divider' />
 
-                    {/* Detail rows */}
                     <div className='home-profile-grid'>
                         <div className='home-profile-row'>
                             <FontAwesomeIcon icon={faIdCard} className='home-profile-icon' />

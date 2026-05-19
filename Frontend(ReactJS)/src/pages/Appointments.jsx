@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '../hooks/useAuth'
-import { useData } from '../hooks/useData'
+import { getMe, getAppointments } from '../services/api'
 import StudentNavbar from '../components/navbar/StudentNavbar'
 import Calendar from '../components/Calendar'
 import CreateAppointment from '../components/CreateAppointment'
@@ -13,18 +14,33 @@ import nsuBackground from '../assets/nsuBackground.jpeg'
 import '../styles/Appointments.css'
 
 function AppointmentsPage() {
-    const { logout }                                        = useAuth()
-    const { student, appointments, loading, fetchAll,
-            refreshAppointments }                           = useData()
-    const navigate                                          = useNavigate()
+    const { logout }        = useAuth()
+    const navigate          = useNavigate()
+    const queryClient       = useQueryClient()
 
     const [ showForm, setShowForm ]                         = useState( false )
     const [ selectedAppointment, setSelectedAppointment ]   = useState( null )
     const [ view, setView ]                                 = useState( 'list' )
 
+    const { data: student, isLoading: loadingMe } = useQuery( {
+        queryKey:  [ 'me' ],
+        queryFn:   () => getMe().then( res => res.data ),
+        staleTime: Infinity,
+    } )
+
+    const { data: appointments = [], isLoading: loadingAppts } = useQuery( {
+        queryKey:  [ 'appointments' ],
+        queryFn:   () => getAppointments().then( res => res.data ),
+        staleTime: 5 * 60 * 1000,
+    } )
+
     const handleLogout = async () => {
         await logout()
         navigate( '/login' )
+    }
+
+    const refreshAppointments = () => {
+        queryClient.invalidateQueries( { queryKey: [ 'appointments' ] } )
     }
 
     const upcomingAppointments = appointments
@@ -35,14 +51,7 @@ function AppointmentsPage() {
         .filter( a => new Date( a.appointment_date ) < new Date() )
         .sort( ( a, b ) => new Date( b.appointment_date ) - new Date( a.appointment_date ) )
 
-    useEffect( () => {
-        fetchAll().catch( () => {
-            logout()
-            navigate( '/login' )
-        } )
-    }, [] )
-
-    if ( loading ) return <LoadingScreen message='Loading appointments...' />
+    if ( loadingMe || loadingAppts ) return <LoadingScreen message='Loading appointments...' />
 
     return (
         <div className='appointments-wrapper'>
@@ -89,7 +98,7 @@ function AppointmentsPage() {
 
             <div className='appointments-content'>
 
-                {/* Create Appointment Form */}
+                {/* Create Appointment Modal */}
                 { showForm && (
                     <div className='modal-overlay' onClick={ () => setShowForm( false ) }>
                         <div className='modal-box' onClick={ e => e.stopPropagation() }>
@@ -109,7 +118,7 @@ function AppointmentsPage() {
                     <div className='appointments-card'>
                         <Calendar
                             appointments={appointments}
-                            onAppointmentDeleted={ () => refreshAppointments() }
+                            onAppointmentDeleted={refreshAppointments}
                         />
                     </div>
                 )}
@@ -117,7 +126,6 @@ function AppointmentsPage() {
                 {/* List View */}
                 { view === 'list' && (
                     <>
-                        {/* Upcoming */}
                         <div className='appointments-card'>
                             <h2 className='appointments-section-title'>Upcoming</h2>
                             { upcomingAppointments.length === 0 ? (
@@ -159,7 +167,6 @@ function AppointmentsPage() {
                             ) }
                         </div>
 
-                        {/* Past */}
                         <div className='appointments-card'>
                             <h2 className='appointments-section-title'>Past</h2>
                             { pastAppointments.length === 0 ? (
