@@ -7,7 +7,7 @@ from app.models.student import Student
 courses_bp = Blueprint('courses', __name__)
 
 
-# Get all available courses
+# Get all available courses, 40 in total
 @courses_bp.route('/', methods=['GET'])
 def get_courses():
     courses = Course.query.all()

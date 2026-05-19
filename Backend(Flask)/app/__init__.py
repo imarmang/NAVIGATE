@@ -47,6 +47,7 @@ def create_app():
     CORS( app )
 
     from app.models.blacklisted_token import BlackListedToken
+    from app.models.staff import Staff
 
     @jwt.token_in_blocklist_loader
     def check_if_token_is_blacklisted( jwt_header, jwt_payload ):
