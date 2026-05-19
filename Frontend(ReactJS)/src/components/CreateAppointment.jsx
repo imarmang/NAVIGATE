@@ -1,26 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getBookedSlots, createAppointment } from '../services/api'
-import '../styles/CreateAppointment.css'
 import { useQuery } from '@tanstack/react-query'
-import { getStudentCourses } from '../services/api'
-
-
-// Hardcoded instructors per course — replace with API call once Staff model is built
-const INSTRUCTORS = {
-    'COP3530': [
-        { name: 'Dr. Simmonds',   email: 'simmonds@nova.edu',      role: 'Professor' },
-        { name: 'Alex Rivera',    email: 'arivera@mynsu.nova.edu',  role: 'SI'        },
-    ],
-    'COP3337': [
-        { name: 'Dr. Leinecker', email: 'leinecker@nova.edu',      role: 'Professor' },
-        { name: 'Maria Chen',    email: 'mchen@mynsu.nova.edu',     role: 'SI'        },
-    ],
-    'MAD2104': [
-        { name: 'Dr. Chikkamath', email: 'chikkamath@nova.edu',    role: 'Professor' },
-        { name: 'Jordan Lee',     email: 'jlee@mynsu.nova.edu',     role: 'SI'        },
-    ],
-}
+import { getStudentCourses, getBookedSlots, getStaffByCourse, getAppointments, createAppointment } from '../services/api'
+import '../styles/CreateAppointment.css'
 
 // Generate 30-min slots 8:00 AM – 5:30 PM
 const generateTimeSlots = () => {
@@ -57,46 +39,60 @@ const getMinDate = () => {
 
 function CreateAppointment( { onAppointmentCreated, onClose } ) {
     const navigate = useNavigate()
+
+    const [ selectedCourse, setSelectedCourse ]         = useState( null )
+    const [ selectedInstructor, setSelectedInstructor ] = useState( null )
+    const [ selectedDate, setSelectedDate ]             = useState( '' )
+    const [ selectedTime, setSelectedTime ]             = useState( '' )
+    const [ message, setMessage ]                       = useState( '' )
+    const [ showConfirm, setShowConfirm ]               = useState( false )
+    const [ submitting, setSubmitting ]                 = useState( false )
+    const [ error, setError ]                           = useState( '' )
+
+    // Enrolled courses
     const { data: courses = [] } = useQuery( {
         queryKey:  [ 'my-courses' ],
         queryFn:   () => getStudentCourses().then( res => res.data ),
         staleTime: Infinity,
     } )
-    const [ selectedCourse, setSelectedCourse ]                 = useState( null )
-    const [ selectedInstructor, setSelectedInstructor ]         = useState( null )
-    const [ selectedDate, setSelectedDate ]                     = useState( '' )
-    const [ selectedTime, setSelectedTime ]                     = useState( '' )
-    const [ message, setMessage ]                               = useState( '' )
-    const [ bookedSlots, setBookedSlots ]                       = useState( [] )
-    const [ loadingSlots, setLoadingSlots ]                     = useState( false )
-    const [ showConfirm, setShowConfirm ]                       = useState( false )
-    const [ submitting, setSubmitting ]                         = useState( false )
-    const [ error, setError ]                                   = useState( '' )
 
-    const instructorsForCourse = selectedCourse
-        ? ( INSTRUCTORS[ selectedCourse.course_id ] || [] )
+    // Staff for selected course
+    const { data: instructorsForCourse = [], isLoading: loadingInstructors } = useQuery( {
+        queryKey:  [ 'staff', selectedCourse?.id ],
+        queryFn:   () => getStaffByCourse( selectedCourse.id ).then( res => res.data ),
+        enabled:   !!selectedCourse,
+        staleTime: Infinity,
+    } )
+
+    // Instructor's booked slots for selected date — always fresh
+    const { data: bookedSlotsData = [], isLoading: loadingSlots } = useQuery( {
+        queryKey:  [ 'booked-slots', selectedInstructor?.email, selectedDate ],
+        queryFn:   () => getBookedSlots( selectedInstructor.email, selectedDate )
+                            .then( res => res.data.booked_slots ),
+        enabled:   !!selectedInstructor && !!selectedDate,
+        staleTime: 0,
+        refetchInterval: 30000,
+    } )
+
+    // Student's own appointments — to block their own taken slots
+    const { data: myAppointments = [] } = useQuery( {
+        queryKey:  [ 'appointments' ],
+        queryFn:   () => getAppointments().then( res => res.data ),
+        staleTime: 5 * 60 * 1000,
+    } )
+
+    // Student's own booked slots on the selected date
+    const myBookedSlots = selectedDate
+        ? myAppointments
+            .filter( a => a.appointment_date.split( 'T' )[ 0 ] === selectedDate )
+            .map( a => a.appointment_date.split( 'T' )[ 1 ].slice( 0, 5 ) )
         : []
-
-    // Fetch booked slots when instructor + date are both selected
-    useEffect( () => {
-        if ( !selectedInstructor || !selectedDate ) return
-
-        setLoadingSlots( true )
-        setSelectedTime( '' )
-
-        getBookedSlots( selectedInstructor.email, selectedDate )
-            .then( res => setBookedSlots( res.data.booked_slots ) )
-            .catch( () => setBookedSlots( [] ) )
-            .finally( () => setLoadingSlots( false ) )
-
-    }, [ selectedInstructor, selectedDate ] )
 
     const handleCourseSelect = ( course ) => {
         setSelectedCourse( course )
         setSelectedInstructor( null )
         setSelectedDate( '' )
         setSelectedTime( '' )
-        setBookedSlots( [] )
         setError( '' )
     }
 
@@ -104,7 +100,6 @@ function CreateAppointment( { onAppointmentCreated, onClose } ) {
         setSelectedInstructor( instructor )
         setSelectedDate( '' )
         setSelectedTime( '' )
-        setBookedSlots( [] )
     }
 
     const handleDateChange = ( e ) => {
@@ -127,7 +122,7 @@ function CreateAppointment( { onAppointmentCreated, onClose } ) {
             await createAppointment( {
                 course:           selectedCourse.course_id,
                 subject:          selectedCourse.subject,
-                tutor_name:       selectedInstructor.name,
+                tutor_name:       `${ selectedInstructor.first_name } ${ selectedInstructor.last_name }`,
                 tutor_email:      selectedInstructor.email,
                 appointment_date: `${ selectedDate }T${ selectedTime }`,
                 message:          message.trim()
@@ -184,7 +179,7 @@ function CreateAppointment( { onAppointmentCreated, onClose } ) {
                     </div>
                     <div className='ca-confirm-row'>
                         <span className='ca-confirm-label'>{ selectedInstructor.role }</span>
-                        <span className='ca-confirm-value'>{ selectedInstructor.name }</span>
+                        <span className='ca-confirm-value'>{ selectedInstructor.first_name } { selectedInstructor.last_name }</span>
                     </div>
                     <div className='ca-confirm-row'>
                         <span className='ca-confirm-label'>Date</span>
@@ -263,17 +258,21 @@ function CreateAppointment( { onAppointmentCreated, onClose } ) {
                     <p className='ca-step-label'>
                         <span className='ca-step-num'>2</span> Select a Professor or SI
                     </p>
-                    { instructorsForCourse.length === 0 ? (
+                    { loadingInstructors ? (
+                        <p className='ca-step-empty'>Loading instructors...</p>
+                    ) : instructorsForCourse.length === 0 ? (
                         <p className='ca-step-empty'>No instructors available for this course yet.</p>
                     ) : (
                         <div className='ca-options'>
                             { instructorsForCourse.map( instructor => (
                                 <button
                                     key={instructor.email}
-                                    className={`ca-option-btn instructor ${ selectedInstructor?.email === instructor.email ? 'active' : '' }`}
-                                    onClick={ () => handleInstructorSelect( instructor ) }
+                                    className={`ca-option-btn instructor
+                                        ${ selectedInstructor?.email === instructor.email ? 'active' : '' }
+                                        ${ selectedInstructor?.email === instructor.email && instructor.role === 'SI' ? 'si-selected' : '' }
+                                    `}                                    onClick={ () => handleInstructorSelect( instructor ) }
                                 >
-                                    <span className='ca-instructor-name'>{ instructor.name }</span>
+                                    <span className='ca-instructor-name'>{ instructor.first_name } { instructor.last_name }</span>
                                     <span className={`ca-instructor-role ${ instructor.role === 'SI' ? 'si' : 'prof' }`}>
                                         { instructor.role }
                                     </span>
@@ -313,7 +312,7 @@ function CreateAppointment( { onAppointmentCreated, onClose } ) {
                     ) : (
                         <div className='ca-time-grid'>
                             { TIME_SLOTS.map( slot => {
-                                const isBooked   = bookedSlots.includes( slot.value )
+                                const isBooked   = bookedSlotsData.includes( slot.value ) || myBookedSlots.includes( slot.value )
                                 const isSelected = selectedTime === slot.value
                                 return (
                                     <button

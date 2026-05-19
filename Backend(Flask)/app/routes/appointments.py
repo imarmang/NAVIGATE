@@ -54,6 +54,7 @@ def create_appointment():
     tutor_name           = data.get( 'tutor_name', '' ).strip()
     tutor_email          = data.get( 'tutor_email', '' ).strip()
     appointment_date_str = data.get( 'appointment_date', '' ).strip()
+    message = data.get('message', '').strip()
 
     # Validate required fields
     if not all( [ course, subject, tutor_name, tutor_email, appointment_date_str ] ):
@@ -93,7 +94,9 @@ def create_appointment():
         tutor_name=tutor_name,
         subject=subject,
         course=course,
-        appointment_date=appointment_date
+        appointment_date=appointment_date,
+        message=message
+
     )
 
     db.session.add( new_appointment )

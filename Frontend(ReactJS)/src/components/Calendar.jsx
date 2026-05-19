@@ -82,6 +82,7 @@ function Calendar( { appointments, onAppointmentDeleted } ) {
                         setSelectedAppointment( null )
                         onAppointmentDeleted()
                     }}
+                    isPast={ new Date( selectedAppointment.appointment_date ) < new Date() }
                 />
             ) }
         </div>

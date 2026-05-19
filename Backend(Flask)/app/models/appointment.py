@@ -4,7 +4,7 @@ class Appointment(db.Model):
     __tablename__ = 'appointments'
 
     id = db.Column(db.Integer, primary_key=True)
-    n_number = db.Column(db.String(20), nullable=False)
+    n_number = db.Column(db.String(20), db.ForeignKey('students.n_number'), nullable=False)
     tutor_email = db.Column(db.String(255), nullable=False)
     tutor_name = db.Column(db.String(255), nullable=False)
     subject = db.Column(db.String(50), nullable=False)
