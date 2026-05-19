@@ -10,10 +10,9 @@ import nsuBackground from '../assets/nsuBackground.jpeg'
 import '../styles/StudentHome.css'
 
 function StudentHome() {
-    const { logout }                            = useAuth()
-    const { student, appointments, courses,
-            loading, fetchAll }                 = useData()
-    const navigate                              = useNavigate()
+    const { logout }                                             = useAuth()
+    const { student, appointments, courses, loading, fetchAll }  = useData()
+    const navigate                               = useNavigate()
 
     useEffect( () => {
         fetchAll().catch( () => {

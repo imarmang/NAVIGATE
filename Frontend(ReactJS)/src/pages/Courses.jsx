@@ -53,6 +53,8 @@ function CoursesPage() {
 
     // Undo a staged removal
     const handleUndoRemove = ( id ) => {
+        const activeCount = enrolled.filter( e => !pendingRemove.includes( e ) ).length
+        if ( activeCount >= MAX_COURSES ) return
         const next = pendingRemove.filter( x => x !== id )
         setPendingRemove( next )
         if ( next.length === 0 && !hasChanges ) setHasChanges( false )
@@ -148,6 +150,7 @@ function CoursesPage() {
                                                 <button
                                                     className='course-card-undo'
                                                     onClick={ () => handleUndoRemove( course.id ) }
+                                                    disabled={ enrolled.filter( e => !pendingRemove.includes( e ) ).length >= MAX_COURSES }
                                                     title='Undo remove'
                                                 >
                                                     Undo
